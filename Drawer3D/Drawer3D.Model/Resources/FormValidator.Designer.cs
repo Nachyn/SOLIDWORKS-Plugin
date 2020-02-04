@@ -61,7 +61,7 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X может принимать значение от {0} до {1}..
+        ///   Looks up a localized string similar to X может принимать значения от {0} до {1}..
         /// </summary>
         public static string RangeX {
             get {
@@ -70,7 +70,7 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y может принимать значение от {0} до {1}..
+        ///   Looks up a localized string similar to Y может принимать значения от {0} до {1}..
         /// </summary>
         public static string RangeY {
             get {
@@ -79,7 +79,7 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Z может принимать значение от {0} до {1}..
+        ///   Looks up a localized string similar to Z может принимать значения от {0} до {1}..
         /// </summary>
         public static string RangeZ {
             get {

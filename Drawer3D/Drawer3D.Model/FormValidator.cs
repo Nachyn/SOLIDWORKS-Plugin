@@ -16,9 +16,9 @@ namespace Drawer3D.Model
         public const int MinY = 200;
 
 
-        public const int MaxZ = 50;
+        public const int MaxZ = 150;
 
-        public const int MinZ = 150;
+        public const int MinZ = 50;
 
 
         public const int WallThickness = 5;
@@ -33,17 +33,20 @@ namespace Drawer3D.Model
 
         public int MaxLengthBetweenWallsX(int x)
         {
+            CheckRangeX(x);
             return x - (MinLengthBetweenWallsX + WallThickness * 3);
         }
 
         public int MaxLengthBetweenWallsY(int y)
         {
+            CheckRangeY(y);
             return y - (MinLengthBetweenWallsY + WallThickness * 3);
         }
 
 
         public int GetMaxCountWallsX(int x)
         {
+            CheckRangeX(x);
             return (int) Math.Floor((double)
                 ((x - WallThickness * 2) /
                  (MaxLengthBetweenWallsX(x) + WallThickness)));
@@ -51,6 +54,7 @@ namespace Drawer3D.Model
 
         public int GetMaxCountWallsY(int y)
         {
+            CheckRangeY(y);
             return (int) Math.Floor((double)
                 ((y - WallThickness * 2) /
                  (MaxLengthBetweenWallsY(y) + WallThickness)));

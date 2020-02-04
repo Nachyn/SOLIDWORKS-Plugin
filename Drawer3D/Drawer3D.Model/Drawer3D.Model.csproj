@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Drawer.cs" />
     <Compile Include="DrawerAppSettings.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ResourceManagerExtensions.cs" />
     <Compile Include="FormSizeException.cs" />
     <Compile Include="FormValidator.cs" />

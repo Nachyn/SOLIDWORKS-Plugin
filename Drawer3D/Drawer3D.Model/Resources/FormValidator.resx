@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RangeX" xml:space="preserve">
-    <value>X может принимать значение от {0} до {1}.</value>
+    <value>X может принимать значения от {0} до {1}.</value>
   </data>
   <data name="RangeY" xml:space="preserve">
-    <value>Y может принимать значение от {0} до {1}.</value>
+    <value>Y может принимать значения от {0} до {1}.</value>
   </data>
   <data name="RangeZ" xml:space="preserve">
-    <value>Z может принимать значение от {0} до {1}.</value>
+    <value>Z может принимать значения от {0} до {1}.</value>
   </data>
 </root>
