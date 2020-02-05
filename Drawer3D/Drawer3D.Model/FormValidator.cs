@@ -1,24 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Resources;
+using Drawer3D.Model.Enums;
+using Drawer3D.Model.Exceptions;
 using Drawer3D.Model.Extensions;
 
 namespace Drawer3D.Model
 {
-    public class FormValidator
+    public static class FormValidator
     {
-        public const int MaxX = 400;
+        public const int MaxSizeX = 400;
 
-        public const int MinX = 200;
-
-
-        public const int MaxY = 400;
-
-        public const int MinY = 200;
+        public const int MinSizeX = 200;
 
 
-        public const int MaxZ = 150;
+        public const int MaxSizeY = 400;
 
-        public const int MinZ = 50;
+        public const int MinSizeY = 200;
+
+
+        public const int MaxSizeZ = 150;
+
+        public const int MinSizeZ = 50;
 
 
         public const int WallThickness = 5;
@@ -28,62 +31,140 @@ namespace Drawer3D.Model
 
         public const int MinLengthBetweenWallsY = 20;
 
-        private readonly ResourceManager _resourceManager
+        private static readonly ResourceManager _resourceManager
             = new ResourceManager(typeof(Resources.FormValidator));
 
-        public int MaxLengthBetweenWallsX(int x)
+        public static int GetMinLengthBetweenWalls(Vector vector)
         {
-            CheckRangeX(x);
-            return x - (MinLengthBetweenWallsX + WallThickness * 3);
+            return vector switch
+            {
+                Vector.X => MinLengthBetweenWallsX,
+
+                Vector.Y => MinLengthBetweenWallsY,
+
+                _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
+            };
         }
 
-        public int MaxLengthBetweenWallsY(int y)
+        public static int GetMaxLengthBetweenWalls(int size, Vector vector)
         {
-            CheckRangeY(y);
-            return y - (MinLengthBetweenWallsY + WallThickness * 3);
+            CheckSize(size, vector);
+            var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
+            return size - (minLengthBetweenWalls + WallThickness * 3);
         }
 
-
-        public int GetMaxCountWallsX(int x)
+        public static int GetMaxCountWalls(int size, Vector vector)
         {
-            CheckRangeX(x);
-            return (int) Math.Floor((double)
-                ((x - WallThickness * 2) /
-                 (MaxLengthBetweenWallsX(x) + WallThickness)));
+            CheckSize(size, vector);
+
+            var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
+
+            var countWalls =
+                (size - WallThickness * 2) /
+                (double) (minLengthBetweenWalls + WallThickness);
+
+            return (int) countWalls - 1;
         }
 
-        public int GetMaxCountWallsY(int y)
+        public static void CheckSize(int size, Vector vector)
         {
-            CheckRangeY(y);
-            return (int) Math.Floor((double)
-                ((y - WallThickness * 2) /
-                 (MaxLengthBetweenWallsY(y) + WallThickness)));
-        }
+            int minSize;
+            int maxSize;
 
-        public void CheckRangeX(int x)
-        {
-            if (x < MinX || x > MaxX)
+            switch (vector)
+            {
+                case Vector.X:
+                    minSize = MinSizeX;
+                    maxSize = MaxSizeX;
+                    break;
+
+                case Vector.Y:
+                    minSize = MinSizeY;
+                    maxSize = MaxSizeY;
+                    break;
+
+                case Vector.Z:
+                    minSize = MinSizeZ;
+                    maxSize = MaxSizeZ;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(vector), vector, null);
+            }
+
+            if (size < minSize || size > maxSize)
             {
                 throw new FormSizeException(
-                    _resourceManager.GetFormattedString("RangeX", MinX, MaxX));
+                    _resourceManager.GetFormattedString("SizeVector"
+                        , vector.GetEnumDescription()
+                        , minSize
+                        , maxSize));
             }
         }
 
-        public void CheckRangeY(int y)
+        public static void CheckWallPoints(int size, List<int> points, Vector vector)
         {
-            if (y < MinY || y > MaxY)
+            if (points.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var maxCountWallsX = GetMaxCountWalls(size, vector);
+            if (points.Count > maxCountWallsX)
             {
                 throw new FormSizeException(
-                    _resourceManager.GetFormattedString("RangeY", MinY, MaxY));
+                    _resourceManager.GetFormattedString("MaxCountWalls"
+                        , vector.GetEnumDescription()
+                        , maxCountWallsX));
+            }
+
+            int? lastPoint = null;
+            foreach (var point in points)
+            {
+                CheckValidPoints(size, lastPoint, point, vector);
+                lastPoint = point;
             }
         }
 
-        public void CheckRangeZ(int z)
+        private static void CheckValidPoints(int size, int? lastPoint, int point,
+            Vector vector)
         {
-            if (z < MinZ || z > MaxZ)
+            CheckBorderPoint(size, point, vector);
+
+            if (!lastPoint.HasValue)
+            {
+                return;
+            }
+
+            CheckBorderPoint(size, lastPoint.Value, vector);
+
+            var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
+
+            if (point - (lastPoint + WallThickness) < minLengthBetweenWalls)
             {
                 throw new FormSizeException(
-                    _resourceManager.GetFormattedString("RangeZ", MinZ, MaxZ));
+                    _resourceManager.GetFormattedString("PointsInterval"
+                        , lastPoint
+                        , point
+                        , vector.GetEnumDescription()
+                        , minLengthBetweenWalls));
+            }
+        }
+
+        private static void CheckBorderPoint(int size, int point, Vector vector)
+        {
+            var maxPoint = GetMaxLengthBetweenWalls(size, vector) + WallThickness;
+
+            var minPoint = GetMinLengthBetweenWalls(vector) + WallThickness;
+
+            if (point < minPoint || point > maxPoint)
+            {
+                throw new FormSizeException(
+                    _resourceManager.GetFormattedString("PointBorder"
+                        , point
+                        , vector.GetEnumDescription()
+                        , minPoint
+                        , maxPoint));
             }
         }
     }

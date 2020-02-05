@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Drawer3D.Model
+namespace Drawer3D.Model.Exceptions
 {
     public class FormSizeException : Exception
     {

@@ -61,29 +61,38 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X может принимать значения от {0} до {1}..
+        ///   Looks up a localized string similar to Максимальное количество стен вдоль вектора {0} равно {1}..
         /// </summary>
-        public static string RangeX {
+        public static string MaxCountWalls {
             get {
-                return ResourceManager.GetString("RangeX", resourceCulture);
+                return ResourceManager.GetString("MaxCountWalls", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Y может принимать значения от {0} до {1}..
+        ///   Looks up a localized string similar to Точка {0} вектора {1} не принадлежит допустимой границе от {2} до {3}..
         /// </summary>
-        public static string RangeY {
+        public static string PointBorder {
             get {
-                return ResourceManager.GetString("RangeY", resourceCulture);
+                return ResourceManager.GetString("PointBorder", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Z может принимать значения от {0} до {1}..
+        ///   Looks up a localized string similar to Между точками {0} и {1} вектора {2} требуется минимальный интервал {3}..
         /// </summary>
-        public static string RangeZ {
+        public static string PointsInterval {
             get {
-                return ResourceManager.GetString("RangeZ", resourceCulture);
+                return ResourceManager.GetString("PointsInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Размер вектора {0} может быть от {1} до {2}..
+        /// </summary>
+        public static string SizeVector {
+            get {
+                return ResourceManager.GetString("SizeVector", resourceCulture);
             }
         }
     }

@@ -117,13 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RangeX" xml:space="preserve">
-    <value>X может принимать значения от {0} до {1}.</value>
+  <data name="MaxCountWalls" xml:space="preserve">
+    <value>Максимальное количество стен вдоль вектора {0} равно {1}.</value>
   </data>
-  <data name="RangeY" xml:space="preserve">
-    <value>Y может принимать значения от {0} до {1}.</value>
+  <data name="PointBorder" xml:space="preserve">
+    <value>Точка {0} вектора {1} не принадлежит допустимой границе от {2} до {3}.</value>
   </data>
-  <data name="RangeZ" xml:space="preserve">
-    <value>Z может принимать значения от {0} до {1}.</value>
+  <data name="PointsInterval" xml:space="preserve">
+    <value>Между точками {0} и {1} вектора {2} требуется минимальный интервал {3}.</value>
+  </data>
+  <data name="SizeVector" xml:space="preserve">
+    <value>Размер вектора {0} может быть от {1} до {2}.</value>
   </data>
 </root>

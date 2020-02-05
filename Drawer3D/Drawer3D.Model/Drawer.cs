@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Drawer3D.Model.Enums;
 using Drawer3D.Model.Extensions;
 using SolidWorks.Interop.sldworks;
 
@@ -9,17 +10,13 @@ namespace Drawer3D.Model
     {
         private readonly DrawerAppSettings _appSettings;
 
-        private readonly FormValidator _formValidator;
-
         private SldWorks _app;
 
         private IModelDoc2 _document;
 
-        public Drawer(DrawerAppSettings appSettings
-            , FormValidator formValidator)
+        public Drawer(DrawerAppSettings appSettings)
         {
             _appSettings = appSettings;
-            _formValidator = formValidator;
             ConnectToApp();
         }
 
@@ -47,9 +44,9 @@ namespace Drawer3D.Model
 
         public void BuildBase(int x, int y, int z)
         {
-            _formValidator.CheckRangeX(x);
-            _formValidator.CheckRangeY(y);
-            _formValidator.CheckRangeZ(z);
+            FormValidator.CheckSize(x, Vector.X);
+            FormValidator.CheckSize(y, Vector.Y);
+            FormValidator.CheckSize(z, Vector.Z);
 
             _document.Extension.SelectByID2("Сверху", "PLANE", 0, 0, 0,
                 false, 0, null, 0);
