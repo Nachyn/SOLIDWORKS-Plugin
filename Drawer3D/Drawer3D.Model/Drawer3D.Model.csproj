@@ -47,6 +47,9 @@
   <ItemGroup>
     <Compile Include="Drawer.cs" />
     <Compile Include="DrawerAppSettings.cs" />
+    <Compile Include="Enums\Vector.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ResourceManagerExtensions.cs" />
     <Compile Include="FormSizeException.cs" />
