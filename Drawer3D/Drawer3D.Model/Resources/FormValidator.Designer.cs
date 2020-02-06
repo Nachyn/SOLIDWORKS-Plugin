@@ -61,6 +61,15 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Основание не построено..
+        /// </summary>
+        public static string BaseNotBuilt {
+            get {
+                return ResourceManager.GetString("BaseNotBuilt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Максимальное количество стен вдоль вектора {0} равно {1}..
         /// </summary>
         public static string MaxCountWalls {

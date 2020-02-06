@@ -2,9 +2,9 @@
 
 namespace Drawer3D.Model.Exceptions
 {
-    public class FormSizeException : Exception
+    public class FormException : Exception
     {
-        public FormSizeException(string message)
+        public FormException(string message)
             : base(message)
         {
         }

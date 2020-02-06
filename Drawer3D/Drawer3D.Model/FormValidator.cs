@@ -34,6 +34,12 @@ namespace Drawer3D.Model
         private static readonly ResourceManager _resourceManager
             = new ResourceManager(typeof(Resources.FormValidator));
 
+        public static void ThrowBaseNotBuilt()
+        {
+            throw new FormException(_resourceManager
+                .GetFormattedString("BaseNotBuilt"));
+        }
+
         public static int GetMinLengthBetweenWalls(Vector vector)
         {
             return vector switch
@@ -94,7 +100,7 @@ namespace Drawer3D.Model
 
             if (size < minSize || size > maxSize)
             {
-                throw new FormSizeException(
+                throw new FormException(
                     _resourceManager.GetFormattedString("SizeVector"
                         , vector.GetEnumDescription()
                         , minSize
@@ -112,7 +118,7 @@ namespace Drawer3D.Model
             var maxCountWallsX = GetMaxCountWalls(size, vector);
             if (points.Count > maxCountWallsX)
             {
-                throw new FormSizeException(
+                throw new FormException(
                     _resourceManager.GetFormattedString("MaxCountWalls"
                         , vector.GetEnumDescription()
                         , maxCountWallsX));
@@ -142,7 +148,7 @@ namespace Drawer3D.Model
 
             if (point - (lastPoint + WallThickness) < minLengthBetweenWalls)
             {
-                throw new FormSizeException(
+                throw new FormException(
                     _resourceManager.GetFormattedString("PointsInterval"
                         , lastPoint
                         , point
@@ -159,7 +165,7 @@ namespace Drawer3D.Model
 
             if (point < minPoint || point > maxPoint)
             {
-                throw new FormSizeException(
+                throw new FormException(
                     _resourceManager.GetFormattedString("PointBorder"
                         , point
                         , vector.GetEnumDescription()

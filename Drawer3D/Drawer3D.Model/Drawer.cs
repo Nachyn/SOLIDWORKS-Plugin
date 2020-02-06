@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Extensions;
@@ -13,6 +14,16 @@ namespace Drawer3D.Model
         private SldWorks _app;
 
         private IModelDoc2 _document;
+
+        private const string TopAxisName = "Сверху";
+
+        private const string SelectionAxisType = "PLANE";
+
+        private int? _x;
+
+        private int? _y;
+
+        private int? _z;
 
         public Drawer(DrawerAppSettings appSettings)
         {
@@ -48,34 +59,96 @@ namespace Drawer3D.Model
             FormValidator.CheckSize(y, Vector.Y);
             FormValidator.CheckSize(z, Vector.Z);
 
-            _document.Extension.SelectByID2("Сверху", "PLANE", 0, 0, 0,
-                false, 0, null, 0);
+            SelectTopAxis();
 
-            _document.SketchManager.InsertSketch(true);
-            _document.SketchManager.CreateCornerRectangle(0, 0, 0, x.ToMilli(),
-                y.ToMilli(), 0);
+            ToggleSketchMode();
+            CreateRectangleOnSketch(0, 0, 0, x, y, 0);
+            ClearSelection();
 
-            _document.ClearSelection2(true);
-
-            _document.SketchManager.InsertSketch(true);
+            ToggleSketchMode();
             ExtrudeSketch(FormValidator.WallThickness);
 
-            SelectByRay(x / (double) 2, y / (double) 2, z);
+            SelectByPoint(x / (double) 2, y / (double) 2, FormValidator.WallThickness);
 
-            _document.SketchManager.InsertSketch(true);
-            _document.SketchManager.CreateCornerRectangle(0, 0, 0, x.ToMilli(),
-                y.ToMilli(), 0);
+            ToggleSketchMode();
+            CreateRectangleOnSketch(0, 0, 0, x, y, 0);
+            ClearSelection();
 
-            _document.ClearSelection2(true);
-            _document.SketchManager.CreateCornerRectangle(
-                FormValidator.WallThickness.ToMilli(),
-                FormValidator.WallThickness.ToMilli(), 0,
-                (x - FormValidator.WallThickness).ToMilli(),
-                (y - FormValidator.WallThickness).ToMilli(), 0);
+            CreateRectangleOnSketch(FormValidator.WallThickness
+                , FormValidator.WallThickness
+                , 0
+                , x - FormValidator.WallThickness
+                , y - FormValidator.WallThickness
+                , 0);
 
-            _document.ClearSelection2(true);
-            _document.SketchManager.InsertSketch(true);
+            ClearSelection();
+
+            ToggleSketchMode();
             ExtrudeSketch(z - FormValidator.WallThickness);
+
+            _x = x;
+            _y = y;
+            _z = z;
+        }
+
+        public void BuildGrid(List<int> pointsX, List<int> pointsY)
+        {
+            if (!_x.HasValue || !_y.HasValue || !_z.HasValue)
+            {
+                FormValidator.ThrowBaseNotBuilt();
+            }
+
+            FormValidator.CheckWallPoints(_x.Value, pointsX, Vector.X);
+            FormValidator.CheckWallPoints(_y.Value, pointsY, Vector.Y);
+
+            CreateWalls(pointsX, Vector.X);
+            CreateWalls(pointsY, Vector.Y);
+        }
+
+        private void CreateWalls(List<int> points, Vector vector)
+        {
+            if (points.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var y1 = FormValidator.WallThickness;
+            var z = FormValidator.WallThickness;
+
+            var y2 = vector switch
+            {
+                Vector.X => _y.Value - FormValidator.WallThickness,
+
+                Vector.Y => _x.Value - FormValidator.WallThickness,
+
+                _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
+            };
+
+            SelectByPoint(FormValidator.WallThickness + 1
+                , FormValidator.WallThickness + 1
+                , FormValidator.WallThickness);
+
+            ToggleSketchMode();
+
+            foreach (var point in points)
+            {
+                var x1 = point;
+                var x2 = point + FormValidator.WallThickness;
+
+                switch (vector)
+                {
+                    case Vector.X:
+                        CreateRectangleOnSketch(x1, y1, z, x2, y2, z);
+                        break;
+                    case Vector.Y:
+                        CreateRectangleOnSketch(y1, x1, z, y2, x2, z);
+                        break;
+                }
+
+                ClearSelection();
+            }
+
+            ExtrudeSketch(_z.Value - FormValidator.WallThickness);
         }
 
         private void ExtrudeSketch(double height)
@@ -88,14 +161,39 @@ namespace Drawer3D.Model
                 false, true, true, true, 0, 0, false);
 
             _document.ISelectionManager.EnableContourSelection = false;
-            _document.ClearSelection2(true);
+            ClearSelection();
         }
 
-        private void SelectByRay(double x, double y, double z)
+        private void SelectByPoint(double pointX, double pointY, double pointZ)
         {
-            _document.Extension.SelectByRay(x.ToMilli(), z.ToMilli(), -y.ToMilli(),
-                -0.4000360267793123259, -0.5150380749100240685, -0.7580942940502836125,
-                0.0004417696109455605314, 2, false, 0, 0);
+            _document.Extension.SelectByRay(pointX.ToMilli(),
+                pointZ.ToMilli(),
+                -pointY.ToMilli(),
+                1, 1, 1, 1, 2, false, 0, 0);
+        }
+
+        private void SelectTopAxis()
+        {
+            _document.Extension.SelectByID2(TopAxisName, SelectionAxisType,
+                0, 0, 0, false, 0, null, 0);
+        }
+
+        private void ToggleSketchMode()
+        {
+            _document.SketchManager.InsertSketch(true);
+        }
+
+        private void CreateRectangleOnSketch(double x1, double y1, double z1,
+            double x2, double y2, double z2)
+        {
+            _document.SketchManager.CreateCornerRectangle(x1.ToMilli(), y1.ToMilli(),
+                z1.ToMilli(), x2.ToMilli(),
+                y2.ToMilli(), z2.ToMilli());
+        }
+
+        private void ClearSelection()
+        {
+            _document.ClearSelection2(true);
         }
     }
 }
