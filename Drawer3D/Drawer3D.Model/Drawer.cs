@@ -53,6 +53,11 @@ namespace Drawer3D.Model
             _document = _app.IActiveDoc2;
         }
 
+        public void SaveToFile(string filePath)
+        {
+            _document.SaveAs3(filePath, 0, 0);
+        }
+
         public void BuildBase(int x, int y, int z)
         {
             FormValidator.CheckSize(x, Vector.X);
@@ -141,7 +146,7 @@ namespace Drawer3D.Model
                         CreateRectangleOnSketch(x1, y1, z, x2, y2, z);
                         break;
                     case Vector.Y:
-                        CreateRectangleOnSketch(y1, x1, z, y2, x2, z);
+                        CreateRectangleOnSketch(y1, x1, z, y2 + 0.00001, x2, z);
                         break;
                 }
 
