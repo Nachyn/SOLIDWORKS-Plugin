@@ -34,6 +34,12 @@ namespace Drawer3D.Model
         private static readonly ResourceManager _resourceManager
             = new ResourceManager(typeof(Resources.FormValidator));
 
+        public static void ThrowGridEmptyPoints()
+        {
+            throw new FormException(_resourceManager
+                .GetFormattedString("GridEmptyPoints"));
+        }
+
         public static void ThrowGridBuilt()
         {
             throw new FormException(_resourceManager
@@ -162,9 +168,9 @@ namespace Drawer3D.Model
 
             CheckBorderPoint(size, lastPoint.Value, vector);
 
-            var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
+            var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector) + WallThickness;
 
-            if (point - (lastPoint + WallThickness) < minLengthBetweenWalls)
+            if (point - lastPoint < minLengthBetweenWalls)
             {
                 throw new FormException(
                     _resourceManager.GetFormattedString("PointsInterval"

@@ -129,6 +129,9 @@
   <data name="GridBuilt" xml:space="preserve">
     <value>Сетка уже построена.</value>
   </data>
+  <data name="GridEmptyPoints" xml:space="preserve">
+    <value>Введите точки, вдоль которых будут построены стены.</value>
+  </data>
   <data name="MaxCountWalls" xml:space="preserve">
     <value>Максимальное количество стен вдоль вектора {0} равно {1}.</value>
   </data>

@@ -97,6 +97,15 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введите точки, вдоль которых будут построены стены..
+        /// </summary>
+        public static string GridEmptyPoints {
+            get {
+                return ResourceManager.GetString("GridEmptyPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Максимальное количество стен вдоль вектора {0} равно {1}..
         /// </summary>
         public static string MaxCountWalls {

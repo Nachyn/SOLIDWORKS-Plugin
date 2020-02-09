@@ -52,6 +52,9 @@ namespace Drawer3D.Model
 
             _app.NewPart();
             _document = _app.IActiveDoc2;
+
+            _isGridBuilt = false;
+            _x = _y = _z = null;
         }
 
         public void SaveToFile(string filePath)
@@ -112,6 +115,11 @@ namespace Drawer3D.Model
             if (_isGridBuilt)
             {
                 FormValidator.ThrowGridBuilt();
+            }
+
+            if (pointsX.IsNullOrEmpty() && pointsY.IsNullOrEmpty())
+            {
+                FormValidator.ThrowGridEmptyPoints();
             }
 
             if (!_x.HasValue || !_y.HasValue || !_z.HasValue)
