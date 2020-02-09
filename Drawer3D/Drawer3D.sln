@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawer3D.Console", "Drawer3D.Console\Drawer3D.Console.csproj", "{A29071B2-96DE-4280-8A3F-5BD8297F488B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawer3D.Model", "Drawer3D.Model\Drawer3D.Model.csproj", "{35FD044F-FC27-4C3C-A86D-9D702E60A6BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawer3D.View", "Drawer3D.View\Drawer3D.View.csproj", "{19638CF1-DE42-4B28-B782-C814F20E6FB7}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A29071B2-96DE-4280-8A3F-5BD8297F488B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A29071B2-96DE-4280-8A3F-5BD8297F488B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A29071B2-96DE-4280-8A3F-5BD8297F488B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A29071B2-96DE-4280-8A3F-5BD8297F488B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35FD044F-FC27-4C3C-A86D-9D702E60A6BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35FD044F-FC27-4C3C-A86D-9D702E60A6BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35FD044F-FC27-4C3C-A86D-9D702E60A6BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
