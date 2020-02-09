@@ -25,10 +25,11 @@ namespace Drawer3D.Model
 
         private int? _z;
 
+        private bool _isGridBuilt;
+
         public Drawer(DrawerAppSettings appSettings)
         {
             _appSettings = appSettings;
-            ConnectToApp();
         }
 
         public void KillApp()
@@ -41,7 +42,7 @@ namespace Drawer3D.Model
             }
         }
 
-        private void ConnectToApp()
+        public void ConnectToApp()
         {
             var appInstance = Activator.CreateInstance(
                 Type.GetTypeFromCLSID(_appSettings.Guid));
@@ -55,11 +56,19 @@ namespace Drawer3D.Model
 
         public void SaveToFile(string filePath)
         {
+            CheckConnection();
             _document.SaveAs3(filePath, 0, 0);
         }
 
         public void BuildBase(int x, int y, int z)
         {
+            CheckConnection();
+
+            if (_x.HasValue || _y.HasValue || _z.HasValue)
+            {
+                FormValidator.ThrowBaseBuilt();
+            }
+
             FormValidator.CheckSize(x, Vector.X);
             FormValidator.CheckSize(y, Vector.Y);
             FormValidator.CheckSize(z, Vector.Z);
@@ -98,6 +107,13 @@ namespace Drawer3D.Model
 
         public void BuildGrid(List<int> pointsX, List<int> pointsY)
         {
+            CheckConnection();
+
+            if (_isGridBuilt)
+            {
+                FormValidator.ThrowGridBuilt();
+            }
+
             if (!_x.HasValue || !_y.HasValue || !_z.HasValue)
             {
                 FormValidator.ThrowBaseNotBuilt();
@@ -108,6 +124,8 @@ namespace Drawer3D.Model
 
             CreateWalls(pointsX, Vector.X);
             CreateWalls(pointsY, Vector.Y);
+
+            _isGridBuilt = true;
         }
 
         private void CreateWalls(List<int> points, Vector vector)
@@ -154,6 +172,14 @@ namespace Drawer3D.Model
             }
 
             ExtrudeSketch(_z.Value - FormValidator.WallThickness);
+        }
+
+        private void CheckConnection()
+        {
+            if (_app == null || _document == null)
+            {
+                FormValidator.ThrowAppNotConnected();
+            }
         }
 
         private void ExtrudeSketch(double height)

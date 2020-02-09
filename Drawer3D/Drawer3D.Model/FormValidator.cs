@@ -34,10 +34,28 @@ namespace Drawer3D.Model
         private static readonly ResourceManager _resourceManager
             = new ResourceManager(typeof(Resources.FormValidator));
 
+        public static void ThrowGridBuilt()
+        {
+            throw new FormException(_resourceManager
+                .GetFormattedString("GridBuilt"));
+        }
+
+        public static void ThrowAppNotConnected()
+        {
+            throw new FormException(_resourceManager
+                .GetFormattedString("AppNotConnected"));
+        }
+
         public static void ThrowBaseNotBuilt()
         {
             throw new FormException(_resourceManager
                 .GetFormattedString("BaseNotBuilt"));
+        }
+
+        public static void ThrowBaseBuilt()
+        {
+            throw new FormException(_resourceManager
+                .GetFormattedString("BaseBuilt"));
         }
 
         public static int GetMinLengthBetweenWalls(Vector vector)

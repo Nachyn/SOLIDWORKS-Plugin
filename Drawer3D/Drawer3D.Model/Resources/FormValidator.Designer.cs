@@ -61,11 +61,38 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Необходимо подключиться к SolidWorks..
+        /// </summary>
+        public static string AppNotConnected {
+            get {
+                return ResourceManager.GetString("AppNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основание уже построено..
+        /// </summary>
+        public static string BaseBuilt {
+            get {
+                return ResourceManager.GetString("BaseBuilt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Основание не построено..
         /// </summary>
         public static string BaseNotBuilt {
             get {
                 return ResourceManager.GetString("BaseNotBuilt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сетка уже построена..
+        /// </summary>
+        public static string GridBuilt {
+            get {
+                return ResourceManager.GetString("GridBuilt", resourceCulture);
             }
         }
         
