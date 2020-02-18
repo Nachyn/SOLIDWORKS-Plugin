@@ -89,6 +89,43 @@ namespace Drawer3D.View
 
         private void ButtonBuildWalls_Click(object sender, EventArgs e)
         {
+            Walls wallsX = null;
+            if (_textBoxHeightWallsX.Enabled)
+            {
+                wallsX = new Walls
+                {
+                    Height = int.Parse(_textBoxHeightWallsX.Text),
+                    Points = _wallsX.Select(tb => int.Parse(tb.Text)).ToList()
+                };
+            }
+
+            Walls wallsY = null;
+            if (_textBoxHeightWallsY.Enabled)
+            {
+                wallsY = new Walls
+                {
+                    Height = int.Parse(_textBoxHeightWallsY.Text),
+                    Points = _wallsY.Select(tb => int.Parse(tb.Text)).ToList()
+                };
+            }
+
+            var figure = new Figure
+            {
+                X = int.Parse(_textBoxBaseX.Text),
+                Y = int.Parse(_textBoxBaseY.Text),
+                Z = int.Parse(_textBoxBaseZ.Text),
+                WallsX = wallsX,
+                WallsY = wallsY
+            };
+
+            try
+            {
+                _drawer.BuildFigure(figure);
+            }
+            catch (FormException exception)
+            {
+                HandleFormException(exception);
+            }
         }
 
         private void ButtonAddWallX_Click(object sender, EventArgs e)
