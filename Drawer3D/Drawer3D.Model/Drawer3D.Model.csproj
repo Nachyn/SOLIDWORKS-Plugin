@@ -55,6 +55,7 @@
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Extensions\ResourceManagerExtensions.cs" />
     <Compile Include="Exceptions\FormException.cs" />
+    <Compile Include="Figure.cs" />
     <Compile Include="FormValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\FormValidator.Designer.cs">
@@ -62,6 +63,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FormValidator.resx</DependentUpon>
     </Compile>
+    <Compile Include="Walls.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

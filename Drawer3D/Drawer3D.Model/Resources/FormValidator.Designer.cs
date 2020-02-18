@@ -61,7 +61,7 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Необходимо подключиться к SolidWorks..
+        ///   Looks up a localized string similar to Необходимо создать проект..
         /// </summary>
         public static string AppNotConnected {
             get {
@@ -70,38 +70,20 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Основание уже построено..
+        ///   Looks up a localized string similar to Фигура уже построена..
         /// </summary>
-        public static string BaseBuilt {
+        public static string FigureBuilt {
             get {
-                return ResourceManager.GetString("BaseBuilt", resourceCulture);
+                return ResourceManager.GetString("FigureBuilt", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Основание не построено..
+        ///   Looks up a localized string similar to Высота стен вектора {0} может быть от {1} до {2}..
         /// </summary>
-        public static string BaseNotBuilt {
+        public static string HeightWalls {
             get {
-                return ResourceManager.GetString("BaseNotBuilt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Сетка уже построена..
-        /// </summary>
-        public static string GridBuilt {
-            get {
-                return ResourceManager.GetString("GridBuilt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Введите точки, вдоль которых будут построены стены..
-        /// </summary>
-        public static string GridEmptyPoints {
-            get {
-                return ResourceManager.GetString("GridEmptyPoints", resourceCulture);
+                return ResourceManager.GetString("HeightWalls", resourceCulture);
             }
         }
         

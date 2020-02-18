@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Extensions;
@@ -23,9 +22,7 @@ namespace Drawer3D.Model
 
         private int? _y;
 
-        private int? _z;
-
-        private bool _isGridBuilt;
+        private bool _isFigureBuilt;
 
         public Drawer(DrawerAppSettings appSettings)
         {
@@ -53,8 +50,7 @@ namespace Drawer3D.Model
             _app.NewPart();
             _document = _app.IActiveDoc2;
 
-            _isGridBuilt = false;
-            _x = _y = _z = null;
+            _isFigureBuilt = false;
         }
 
         public void SaveToFile(string filePath)
@@ -63,19 +59,34 @@ namespace Drawer3D.Model
             _document.SaveAs3(filePath, 0, 0);
         }
 
-        public void BuildBase(int x, int y, int z)
+        public void BuildFigure(Figure figure)
         {
-            CheckConnection();
-
-            if (_x.HasValue || _y.HasValue || _z.HasValue)
+            if (figure == null)
             {
-                FormValidator.ThrowBaseBuilt();
+                throw new ArgumentNullException(nameof(figure));
             }
 
-            FormValidator.CheckSize(x, Vector.X);
-            FormValidator.CheckSize(y, Vector.Y);
-            FormValidator.CheckSize(z, Vector.Z);
+            if (_isFigureBuilt)
+            {
+                FormValidator.ThrowFigureBuilt();
+            }
 
+            CheckConnection();
+
+            FormValidator.CheckSize(figure.X, Vector.X);
+            FormValidator.CheckSize(figure.Y, Vector.Y);
+            FormValidator.CheckSize(figure.Z, Vector.Z);
+            FormValidator.CheckWalls(figure.X, Vector.X, figure.WallsX, figure.Z);
+            FormValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
+
+            CreateBase(figure.X, figure.Y, figure.Z);
+            CreateWalls(figure.WallsX, Vector.X);
+            CreateWalls(figure.WallsY, Vector.Y);
+            _isFigureBuilt = true;
+        }
+
+        private void CreateBase(int x, int y, int z)
+        {
             SelectTopAxis();
 
             ToggleSketchMode();
@@ -105,40 +116,11 @@ namespace Drawer3D.Model
 
             _x = x;
             _y = y;
-            _z = z;
         }
 
-        public void BuildGrid(List<int> pointsX, List<int> pointsY)
+        private void CreateWalls(Walls walls, Vector vector)
         {
-            CheckConnection();
-
-            if (_isGridBuilt)
-            {
-                FormValidator.ThrowGridBuilt();
-            }
-
-            if (pointsX.IsNullOrEmpty() && pointsY.IsNullOrEmpty())
-            {
-                FormValidator.ThrowGridEmptyPoints();
-            }
-
-            if (!_x.HasValue || !_y.HasValue || !_z.HasValue)
-            {
-                FormValidator.ThrowBaseNotBuilt();
-            }
-
-            FormValidator.CheckWallPoints(_x.Value, pointsX, Vector.X);
-            FormValidator.CheckWallPoints(_y.Value, pointsY, Vector.Y);
-
-            CreateWalls(pointsX, Vector.X);
-            CreateWalls(pointsY, Vector.Y);
-
-            _isGridBuilt = true;
-        }
-
-        private void CreateWalls(List<int> points, Vector vector)
-        {
-            if (points.IsNullOrEmpty())
+            if (walls == null || walls.Points.IsNullOrEmpty())
             {
                 return;
             }
@@ -161,7 +143,7 @@ namespace Drawer3D.Model
 
             ToggleSketchMode();
 
-            foreach (var point in points)
+            foreach (var point in walls.Points)
             {
                 var x1 = point;
                 var x2 = point + FormValidator.WallThickness;
@@ -179,7 +161,7 @@ namespace Drawer3D.Model
                 ClearSelection();
             }
 
-            ExtrudeSketch(_z.Value - FormValidator.WallThickness);
+            ExtrudeSketch(walls.Height);
         }
 
         private void CheckConnection()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Resources;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Exceptions;
@@ -34,34 +33,16 @@ namespace Drawer3D.Model
         private static readonly ResourceManager _resourceManager
             = new ResourceManager(typeof(Resources.FormValidator));
 
-        public static void ThrowGridEmptyPoints()
+        public static void ThrowFigureBuilt()
         {
             throw new FormException(_resourceManager
-                .GetFormattedString("GridEmptyPoints"));
-        }
-
-        public static void ThrowGridBuilt()
-        {
-            throw new FormException(_resourceManager
-                .GetFormattedString("GridBuilt"));
+                .GetFormattedString("FigureBuilt"));
         }
 
         public static void ThrowAppNotConnected()
         {
             throw new FormException(_resourceManager
                 .GetFormattedString("AppNotConnected"));
-        }
-
-        public static void ThrowBaseNotBuilt()
-        {
-            throw new FormException(_resourceManager
-                .GetFormattedString("BaseNotBuilt"));
-        }
-
-        public static void ThrowBaseBuilt()
-        {
-            throw new FormException(_resourceManager
-                .GetFormattedString("BaseBuilt"));
         }
 
         public static int GetMinLengthBetweenWalls(Vector vector)
@@ -132,15 +113,29 @@ namespace Drawer3D.Model
             }
         }
 
-        public static void CheckWallPoints(int size, List<int> points, Vector vector)
+        public static void CheckWalls(int size, Vector vector, Walls walls,
+            int sizeVectorZ)
         {
-            if (points.IsNullOrEmpty())
+            if (walls == null || walls.Points.IsNullOrEmpty())
             {
                 return;
             }
 
+            CheckSize(sizeVectorZ, Vector.Z);
+            var maxHeight = sizeVectorZ - WallThickness;
+            var minHeight = WallThickness;
+
+            if (walls.Height < minHeight || walls.Height > maxHeight)
+            {
+                throw new FormException(
+                    _resourceManager.GetFormattedString("HeightWalls"
+                        , vector.GetEnumDescription()
+                        , minHeight
+                        , maxHeight));
+            }
+
             var maxCountWallsX = GetMaxCountWalls(size, vector);
-            if (points.Count > maxCountWallsX)
+            if (walls.Points.Count > maxCountWallsX)
             {
                 throw new FormException(
                     _resourceManager.GetFormattedString("MaxCountWalls"
@@ -149,7 +144,7 @@ namespace Drawer3D.Model
             }
 
             int? lastPoint = null;
-            foreach (var point in points)
+            foreach (var point in walls.Points)
             {
                 CheckValidPoints(size, lastPoint, point, vector);
                 lastPoint = point;

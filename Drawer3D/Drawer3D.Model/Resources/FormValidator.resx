@@ -118,19 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppNotConnected" xml:space="preserve">
-    <value>Необходимо подключиться к SolidWorks.</value>
+    <value>Необходимо создать проект.</value>
   </data>
-  <data name="BaseBuilt" xml:space="preserve">
-    <value>Основание уже построено.</value>
+  <data name="FigureBuilt" xml:space="preserve">
+    <value>Фигура уже построена.</value>
   </data>
-  <data name="BaseNotBuilt" xml:space="preserve">
-    <value>Основание не построено.</value>
-  </data>
-  <data name="GridBuilt" xml:space="preserve">
-    <value>Сетка уже построена.</value>
-  </data>
-  <data name="GridEmptyPoints" xml:space="preserve">
-    <value>Введите точки, вдоль которых будут построены стены.</value>
+  <data name="HeightWalls" xml:space="preserve">
+    <value>Высота стен вектора {0} может быть от {1} до {2}.</value>
   </data>
   <data name="MaxCountWalls" xml:space="preserve">
     <value>Максимальное количество стен вдоль вектора {0} равно {1}.</value>
