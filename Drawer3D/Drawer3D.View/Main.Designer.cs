@@ -53,6 +53,9 @@
             this._menu = new System.Windows.Forms.ToolStripMenuItem();
             this._menuProjectNew = new System.Windows.Forms.ToolStripMenuItem();
             this._menuProjectSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuParams = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuParamsClear = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuParamsSetDefault = new System.Windows.Forms.ToolStripMenuItem();
             this._errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this._groupBoxBase.SuspendLayout();
             this._groupBoxWalls.SuspendLayout();
@@ -81,7 +84,7 @@
             this._groupBoxBase.Controls.Add(this._labelBaseX);
             this._groupBoxBase.Location = new System.Drawing.Point(12, 27);
             this._groupBoxBase.Name = "_groupBoxBase";
-            this._groupBoxBase.Size = new System.Drawing.Size(155, 106);
+            this._groupBoxBase.Size = new System.Drawing.Size(150, 106);
             this._groupBoxBase.TabIndex = 3;
             this._groupBoxBase.TabStop = false;
             this._groupBoxBase.Text = "Основание";
@@ -151,7 +154,7 @@
             this._groupBoxWalls.Controls.Add(this._labelWallsX);
             this._groupBoxWalls.Location = new System.Drawing.Point(12, 139);
             this._groupBoxWalls.Name = "_groupBoxWalls";
-            this._groupBoxWalls.Size = new System.Drawing.Size(249, 100);
+            this._groupBoxWalls.Size = new System.Drawing.Size(247, 100);
             this._groupBoxWalls.TabIndex = 4;
             this._groupBoxWalls.TabStop = false;
             this._groupBoxWalls.Text = "Сетка";
@@ -257,10 +260,11 @@
             // _menuStrip
             // 
             this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._menu});
+            this._menu,
+            this._menuParams});
             this._menuStrip.Location = new System.Drawing.Point(0, 0);
             this._menuStrip.Name = "_menuStrip";
-            this._menuStrip.Size = new System.Drawing.Size(273, 24);
+            this._menuStrip.Size = new System.Drawing.Size(271, 24);
             this._menuStrip.TabIndex = 7;
             this._menuStrip.Text = "menuStrip1";
             // 
@@ -288,6 +292,29 @@
             this._menuProjectSaveAs.Text = "Сохранить как...";
             this._menuProjectSaveAs.Click += new System.EventHandler(this.MenuProjectSaveAs_Click);
             // 
+            // _menuParams
+            // 
+            this._menuParams.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._menuParamsClear,
+            this._menuParamsSetDefault});
+            this._menuParams.Name = "_menuParams";
+            this._menuParams.Size = new System.Drawing.Size(83, 20);
+            this._menuParams.Text = "Параметры";
+            // 
+            // _menuParamsClear
+            // 
+            this._menuParamsClear.Name = "_menuParamsClear";
+            this._menuParamsClear.Size = new System.Drawing.Size(196, 22);
+            this._menuParamsClear.Text = "Очистить";
+            this._menuParamsClear.Click += new System.EventHandler(this.MenuParamsClear_Click);
+            // 
+            // _menuParamsSetDefault
+            // 
+            this._menuParamsSetDefault.Name = "_menuParamsSetDefault";
+            this._menuParamsSetDefault.Size = new System.Drawing.Size(196, 22);
+            this._menuParamsSetDefault.Text = "Задать по умолчанию";
+            this._menuParamsSetDefault.Click += new System.EventHandler(this.MenuParamsSetDefault_Click);
+            // 
             // _errorProvider
             // 
             this._errorProvider.BlinkRate = 0;
@@ -298,7 +325,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 274);
+            this.ClientSize = new System.Drawing.Size(271, 274);
             this.Controls.Add(this._groupBoxWalls);
             this.Controls.Add(this._groupBoxBase);
             this.Controls.Add(this._buttonBuild);
@@ -350,5 +377,8 @@
         private System.Windows.Forms.ToolStripMenuItem _menuProjectNew;
         private System.Windows.Forms.ToolStripMenuItem _menuProjectSaveAs;
         private System.Windows.Forms.ErrorProvider _errorProvider;
+        private System.Windows.Forms.ToolStripMenuItem _menuParams;
+        private System.Windows.Forms.ToolStripMenuItem _menuParamsClear;
+        private System.Windows.Forms.ToolStripMenuItem _menuParamsSetDefault;
     }
 }

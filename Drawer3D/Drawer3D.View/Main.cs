@@ -344,5 +344,42 @@ namespace Drawer3D.View
                 _drawer.SaveToFile(_saveFileDialog.FileName);
             }
         }
+
+        private void MenuParamsSetDefault_Click(object sender, EventArgs e)
+        {
+            MenuParamsClear_Click(null, null);
+
+            _textBoxBaseX.Text = "200";
+            _textBoxBaseY.Text = "400";
+            _textBoxBaseZ.Text = "50";
+
+            for (var i = 1; i <= 6; i++)
+            {
+                ButtonAddWallX_Click(null, null);
+                _wallsX[i - 1].Text = $"{i * 25}";
+                ButtonAddWallY_Click(null, null);
+                _wallsY[i - 1].Text = $"{i * 25}";
+            }
+
+            _textBoxHeightWallsX.Text = "45";
+            _textBoxHeightWallsY.Text = "45";
+        }
+
+        private void MenuParamsClear_Click(object sender, EventArgs e)
+        {
+            var countWallX = _wallsX.Count;
+            for (var i = 0; i < countWallX; i++)
+            {
+                ButtonRemoveWallX_Click(null, null);
+            }
+
+            var countWallY = _wallsY.Count;
+            for (var i = 0; i < countWallY; i++)
+            {
+                ButtonRemoveWallY_Click(null, null);
+            }
+
+            _textBoxBaseX.Text = _textBoxBaseY.Text = _textBoxBaseZ.Text = string.Empty;
+        }
     }
 }
