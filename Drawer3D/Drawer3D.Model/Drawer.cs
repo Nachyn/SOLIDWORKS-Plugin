@@ -10,6 +10,10 @@ namespace Drawer3D.Model
     {
         private readonly DrawerAppSettings _appSettings;
 
+        private readonly FormValidator _formValidator;
+
+        private readonly FormSettings _formSettings;
+
         private SldWorks _app;
 
         private IModelDoc2 _document;
@@ -18,16 +22,20 @@ namespace Drawer3D.Model
 
         private const string SelectionAxisType = "PLANE";
 
-        private int? _x;
+        private int? _sizeX;
 
-        private int? _y;
+        private int? _sizeY;
 
         private bool _isFigureBuilt;
 
-        public Drawer(DrawerAppSettings appSettings)
+        public Drawer(DrawerAppSettings appSettings, FormSettings formSettings)
         {
             _appSettings = appSettings;
+            _formValidator = new FormValidator(formSettings);
+            _formSettings = formSettings;
         }
+
+        public FormSettings FormSettings => (FormSettings) _formSettings.Clone();
 
         public void KillApp()
         {
@@ -59,6 +67,20 @@ namespace Drawer3D.Model
             _document.SaveAs3(filePath, 0, 0);
         }
 
+        public void CheckFigure(Figure figure)
+        {
+            if (figure == null)
+            {
+                throw new ArgumentNullException(nameof(figure));
+            }
+
+            _formValidator.CheckSize(figure.X, Vector.X);
+            _formValidator.CheckSize(figure.Y, Vector.Y);
+            _formValidator.CheckSize(figure.Z, Vector.Z);
+            _formValidator.CheckWalls(figure.X, Vector.X, figure.WallsX, figure.Z);
+            _formValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
+        }
+
         public void BuildFigure(Figure figure)
         {
             if (figure == null)
@@ -68,16 +90,11 @@ namespace Drawer3D.Model
 
             if (_isFigureBuilt)
             {
-                FormValidator.ThrowFigureBuilt();
+                _formValidator.ThrowFigureBuilt();
             }
 
             CheckConnection();
-
-            FormValidator.CheckSize(figure.X, Vector.X);
-            FormValidator.CheckSize(figure.Y, Vector.Y);
-            FormValidator.CheckSize(figure.Z, Vector.Z);
-            FormValidator.CheckWalls(figure.X, Vector.X, figure.WallsX, figure.Z);
-            FormValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
+            CheckFigure(figure);
 
             CreateBase(figure.X, figure.Y, figure.Z);
             CreateWalls(figure.WallsX, Vector.X);
@@ -94,28 +111,28 @@ namespace Drawer3D.Model
             ClearSelection();
 
             ToggleSketchMode();
-            ExtrudeSketch(FormValidator.WallThickness);
+            ExtrudeSketch(_formSettings.WallThickness);
 
-            SelectByPoint(x / (double) 2, y / (double) 2, FormValidator.WallThickness);
+            SelectByPoint(x / (double) 2, y / (double) 2, _formSettings.WallThickness);
 
             ToggleSketchMode();
             CreateRectangleOnSketch(0, 0, 0, x, y, 0);
             ClearSelection();
 
-            CreateRectangleOnSketch(FormValidator.WallThickness
-                , FormValidator.WallThickness
+            CreateRectangleOnSketch(_formSettings.WallThickness
+                , _formSettings.WallThickness
                 , 0
-                , x - FormValidator.WallThickness
-                , y - FormValidator.WallThickness
+                , x - _formSettings.WallThickness
+                , y - _formSettings.WallThickness
                 , 0);
 
             ClearSelection();
 
             ToggleSketchMode();
-            ExtrudeSketch(z - FormValidator.WallThickness);
+            ExtrudeSketch(z - _formSettings.WallThickness);
 
-            _x = x;
-            _y = y;
+            _sizeX = x;
+            _sizeY = y;
         }
 
         private void CreateWalls(Walls walls, Vector vector)
@@ -125,28 +142,28 @@ namespace Drawer3D.Model
                 return;
             }
 
-            var y1 = FormValidator.WallThickness;
-            var z = FormValidator.WallThickness;
+            var y1 = _formSettings.WallThickness;
+            var z = _formSettings.WallThickness;
 
             var y2 = vector switch
             {
-                Vector.X => _y.Value - FormValidator.WallThickness,
+                Vector.X => _sizeY.Value - _formSettings.WallThickness,
 
-                Vector.Y => _x.Value - FormValidator.WallThickness,
+                Vector.Y => _sizeX.Value - _formSettings.WallThickness,
 
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
 
-            SelectByPoint(FormValidator.WallThickness + 1
-                , FormValidator.WallThickness + 1
-                , FormValidator.WallThickness);
+            SelectByPoint(_formSettings.WallThickness + 1
+                , _formSettings.WallThickness + 1
+                , _formSettings.WallThickness);
 
             ToggleSketchMode();
 
             foreach (var point in walls.Points)
             {
                 var x1 = point;
-                var x2 = point + FormValidator.WallThickness;
+                var x2 = point + _formSettings.WallThickness;
 
                 switch (vector)
                 {
@@ -168,7 +185,7 @@ namespace Drawer3D.Model
         {
             if (_app == null || _document == null)
             {
-                FormValidator.ThrowAppNotConnected();
+                _formValidator.ThrowAppNotConnected();
             }
         }
 

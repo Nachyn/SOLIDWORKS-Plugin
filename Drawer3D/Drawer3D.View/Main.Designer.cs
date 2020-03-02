@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._buttonBuild = new System.Windows.Forms.Button();
             this._groupBoxBase = new System.Windows.Forms.GroupBox();
             this._textBoxBaseZ = new System.Windows.Forms.TextBox();
@@ -52,15 +53,17 @@
             this._menu = new System.Windows.Forms.ToolStripMenuItem();
             this._menuProjectNew = new System.Windows.Forms.ToolStripMenuItem();
             this._menuProjectSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this._errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this._groupBoxBase.SuspendLayout();
             this._groupBoxWalls.SuspendLayout();
             this._menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // _buttonBuild
             // 
             this._buttonBuild.Enabled = false;
-            this._buttonBuild.Location = new System.Drawing.Point(149, 245);
+            this._buttonBuild.Location = new System.Drawing.Point(166, 245);
             this._buttonBuild.Name = "_buttonBuild";
             this._buttonBuild.Size = new System.Drawing.Size(73, 23);
             this._buttonBuild.TabIndex = 2;
@@ -148,7 +151,7 @@
             this._groupBoxWalls.Controls.Add(this._labelWallsX);
             this._groupBoxWalls.Location = new System.Drawing.Point(12, 139);
             this._groupBoxWalls.Name = "_groupBoxWalls";
-            this._groupBoxWalls.Size = new System.Drawing.Size(219, 100);
+            this._groupBoxWalls.Size = new System.Drawing.Size(249, 100);
             this._groupBoxWalls.TabIndex = 4;
             this._groupBoxWalls.TabStop = false;
             this._groupBoxWalls.Text = "Сетка";
@@ -164,7 +167,7 @@
             // 
             // _buttonAddWallY
             // 
-            this._buttonAddWallY.Location = new System.Drawing.Point(137, 63);
+            this._buttonAddWallY.Location = new System.Drawing.Point(154, 63);
             this._buttonAddWallY.Name = "_buttonAddWallY";
             this._buttonAddWallY.Size = new System.Drawing.Size(35, 23);
             this._buttonAddWallY.TabIndex = 10;
@@ -174,7 +177,7 @@
             // 
             // _buttonRemoveWallY
             // 
-            this._buttonRemoveWallY.Location = new System.Drawing.Point(175, 63);
+            this._buttonRemoveWallY.Location = new System.Drawing.Point(192, 63);
             this._buttonRemoveWallY.Name = "_buttonRemoveWallY";
             this._buttonRemoveWallY.Size = new System.Drawing.Size(35, 23);
             this._buttonRemoveWallY.TabIndex = 9;
@@ -185,7 +188,7 @@
             // _textBoxHeightWallsY
             // 
             this._textBoxHeightWallsY.Enabled = false;
-            this._textBoxHeightWallsY.Location = new System.Drawing.Point(137, 37);
+            this._textBoxHeightWallsY.Location = new System.Drawing.Point(154, 37);
             this._textBoxHeightWallsY.Name = "_textBoxHeightWallsY";
             this._textBoxHeightWallsY.Size = new System.Drawing.Size(73, 20);
             this._textBoxHeightWallsY.TabIndex = 7;
@@ -232,7 +235,7 @@
             // _labelWallsY
             // 
             this._labelWallsY.AutoSize = true;
-            this._labelWallsY.Location = new System.Drawing.Point(134, 16);
+            this._labelWallsY.Location = new System.Drawing.Point(151, 16);
             this._labelWallsY.Name = "_labelWallsY";
             this._labelWallsY.Size = new System.Drawing.Size(81, 13);
             this._labelWallsY.TabIndex = 1;
@@ -257,7 +260,7 @@
             this._menu});
             this._menuStrip.Location = new System.Drawing.Point(0, 0);
             this._menuStrip.Name = "_menuStrip";
-            this._menuStrip.Size = new System.Drawing.Size(243, 24);
+            this._menuStrip.Size = new System.Drawing.Size(273, 24);
             this._menuStrip.TabIndex = 7;
             this._menuStrip.Text = "menuStrip1";
             // 
@@ -273,7 +276,7 @@
             // _menuProjectNew
             // 
             this._menuProjectNew.Name = "_menuProjectNew";
-            this._menuProjectNew.Size = new System.Drawing.Size(180, 22);
+            this._menuProjectNew.Size = new System.Drawing.Size(163, 22);
             this._menuProjectNew.Text = "Новый";
             this._menuProjectNew.Click += new System.EventHandler(this.MenuProjectNew_Click);
             // 
@@ -281,15 +284,21 @@
             // 
             this._menuProjectSaveAs.Enabled = false;
             this._menuProjectSaveAs.Name = "_menuProjectSaveAs";
-            this._menuProjectSaveAs.Size = new System.Drawing.Size(180, 22);
+            this._menuProjectSaveAs.Size = new System.Drawing.Size(163, 22);
             this._menuProjectSaveAs.Text = "Сохранить как...";
             this._menuProjectSaveAs.Click += new System.EventHandler(this.MenuProjectSaveAs_Click);
+            // 
+            // _errorProvider
+            // 
+            this._errorProvider.BlinkRate = 0;
+            this._errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this._errorProvider.ContainerControl = this;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(243, 274);
+            this.ClientSize = new System.Drawing.Size(273, 274);
             this.Controls.Add(this._groupBoxWalls);
             this.Controls.Add(this._groupBoxBase);
             this.Controls.Add(this._buttonBuild);
@@ -309,6 +318,7 @@
             this._groupBoxWalls.PerformLayout();
             this._menuStrip.ResumeLayout(false);
             this._menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -339,5 +349,6 @@
         private System.Windows.Forms.ToolStripMenuItem _menu;
         private System.Windows.Forms.ToolStripMenuItem _menuProjectNew;
         private System.Windows.Forms.ToolStripMenuItem _menuProjectSaveAs;
+        private System.Windows.Forms.ErrorProvider _errorProvider;
     }
 }
