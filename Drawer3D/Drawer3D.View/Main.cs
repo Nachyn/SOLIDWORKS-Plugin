@@ -50,7 +50,7 @@ namespace Drawer3D.View
 
         private void InitializeDrawer()
         {
-            _drawer = new Drawer(GetDrawerAppSettings());
+            _drawer = new Drawer(GetDrawerAppSettings(), new FormSettings());
         }
 
         private DrawerAppSettings GetDrawerAppSettings()
@@ -79,15 +79,55 @@ namespace Drawer3D.View
             {
                 textBox.Text = textBox.Text.Trim();
             }
+
+            if (_buttonBuild.Enabled)
+            {
+                try
+                {
+                    _drawer.CheckFigure(GetFigure());
+                }
+                catch (FormException exception)
+                {
+                    HandleFormException(exception);
+                }
+            }
         }
 
         private bool CheckTextBoxesOnInteger(List<TextBox> textBoxes)
         {
-            return textBoxes.Where(textBox => textBox.Enabled)
-                .All(textBox => int.TryParse(textBox.Text, out _));
+            var isValid = true;
+
+            _errorProvider.Clear();
+            foreach (var textBox in textBoxes.Where(textBox =>
+                !int.TryParse(textBox.Text, out _)))
+            {
+                if ((textBox == _textBoxHeightWallsX ||
+                     textBox == _textBoxHeightWallsY)
+                    && !textBox.Enabled)
+                {
+                    continue;
+                }
+
+                isValid = false;
+                _errorProvider.SetError(textBox, "Не является числом.");
+            }
+
+            return isValid;
         }
 
         private void ButtonBuildWalls_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _drawer.BuildFigure(GetFigure());
+            }
+            catch (FormException exception)
+            {
+                HandleFormException(exception);
+            }
+        }
+
+        private Figure GetFigure()
         {
             Walls wallsX = null;
             if (_textBoxHeightWallsX.Enabled)
@@ -109,7 +149,7 @@ namespace Drawer3D.View
                 };
             }
 
-            var figure = new Figure
+            return new Figure
             {
                 X = int.Parse(_textBoxBaseX.Text),
                 Y = int.Parse(_textBoxBaseY.Text),
@@ -117,15 +157,6 @@ namespace Drawer3D.View
                 WallsX = wallsX,
                 WallsY = wallsY
             };
-
-            try
-            {
-                _drawer.BuildFigure(figure);
-            }
-            catch (FormException exception)
-            {
-                HandleFormException(exception);
-            }
         }
 
         private void ButtonAddWallX_Click(object sender, EventArgs e)
@@ -256,10 +287,47 @@ namespace Drawer3D.View
 
         private void HandleFormException(FormException exception)
         {
-            MessageBox.Show(exception.Message,
-                string.Empty,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            _errorProvider.Clear();
+            Control control;
+            switch (exception.FormError.Key)
+            {
+                case "sizeX":
+                    control = _textBoxBaseX;
+                    break;
+                case "sizeY":
+                    control = _textBoxBaseY;
+                    break;
+                case "sizeZ":
+                    control = _textBoxBaseZ;
+                    break;
+                case "heightWallsX":
+                    control = _textBoxHeightWallsX;
+                    break;
+                case "heightWallsY":
+                    control = _textBoxHeightWallsY;
+                    break;
+                case {} key when key.StartsWith("wallX"):
+                {
+                    var number = int.Parse(key.Substring(5));
+                    control = _wallsX[number - 1];
+                    break;
+                }
+                case {} key when key.StartsWith("wallY"):
+                {
+                    var number = int.Parse(key.Substring(5));
+                    control = _wallsY[number - 1];
+                    break;
+                }
+                default:
+                    MessageBox.Show(exception.FormError.Message,
+                        string.Empty,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    return;
+            }
+
+            _errorProvider.SetError(control, exception.FormError.Message);
         }
 
         private void MenuProjectNew_Click(object sender, EventArgs e)
