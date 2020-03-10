@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DrawerTests.cs" />
     <Compile Include="FigureSettingsTests.cs" />
+    <Compile Include="FigureValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
