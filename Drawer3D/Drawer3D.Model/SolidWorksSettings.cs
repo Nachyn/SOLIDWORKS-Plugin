@@ -2,7 +2,7 @@
 
 namespace Drawer3D.Model
 {
-    public class DrawerAppSettings
+    public class SolidWorksSettings
     {
         private string _name = "SLDWORKS";
 

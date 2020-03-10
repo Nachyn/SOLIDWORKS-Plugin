@@ -13,7 +13,7 @@ namespace Drawer3D.View
 {
     public partial class Main : Form
     {
-        private readonly string _drawerAppSettingsPath = "DrawerAppSettings.json";
+        private readonly string _solidWorksSettingsPath = "SolidWorksSettings.json";
 
 
         private Drawer _drawer;
@@ -51,13 +51,13 @@ namespace Drawer3D.View
         private void InitializeDrawer()
         {
             _drawer = new Drawer(new FigureSettings(),
-                new SolidWorksCommander(GetDrawerAppSettings()));
+                new SolidWorksCommander(GetSolidWorksSettings()));
         }
 
-        private DrawerAppSettings GetDrawerAppSettings()
+        private SolidWorksSettings GetSolidWorksSettings()
         {
-            var settingsText = File.ReadAllText(_drawerAppSettingsPath);
-            return JsonConvert.DeserializeObject<DrawerAppSettings>(settingsText);
+            var settingsText = File.ReadAllText(_solidWorksSettingsPath);
+            return JsonConvert.DeserializeObject<SolidWorksSettings>(settingsText);
         }
 
         private void TextBoxes_TextChanged(object sender, EventArgs e)

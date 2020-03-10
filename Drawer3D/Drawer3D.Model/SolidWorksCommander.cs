@@ -5,7 +5,7 @@ using SolidWorks.Interop.sldworks;
 
 namespace Drawer3D.Model
 {
-    public class SolidWorksCommander
+    public class SolidWorksCommander 
     {
         private const string TopAxisName = "Сверху";
 
@@ -20,7 +20,7 @@ namespace Drawer3D.Model
         private const string SelectionSketch = "SKETCH";
 
 
-        private readonly DrawerAppSettings _appSettings;
+        private readonly SolidWorksSettings _appSettings;
 
         private SldWorks _app;
 
@@ -30,9 +30,9 @@ namespace Drawer3D.Model
 
         public bool IsConnectedToApp => _app != null && _document != null;
 
-        public SolidWorksCommander(DrawerAppSettings appSettings)
+        public SolidWorksCommander(SolidWorksSettings appSettings)
         {
-            _appSettings = appSettings;
+            _appSettings = appSettings ?? throw new ArgumentNullException();
         }
 
         public void KillApp()
