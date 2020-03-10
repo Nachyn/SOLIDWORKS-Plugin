@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Drawer3D.Model.Exceptions;
 using Drawer3D.Model.Interfaces;
@@ -19,6 +20,12 @@ namespace Drawer3D.Model.Tests
             _commander = Substitute.For<ISolidWorksCommander>();
             _commander.IsConnectedToApp.Returns(true);
             _drawer = new Drawer(new FigureSettings(), _commander);
+        }
+
+        [Test]
+        public void ConstructorTest_Negative()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Drawer(null, null));
         }
 
         [Test]

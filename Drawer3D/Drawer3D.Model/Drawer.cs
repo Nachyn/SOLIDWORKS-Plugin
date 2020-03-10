@@ -19,9 +19,11 @@ namespace Drawer3D.Model
 
         public Drawer(FigureSettings figureSettings, ISolidWorksCommander commander)
         {
-            _figureValidator = new FigureValidator(figureSettings);
+            _figureValidator =
+                new FigureValidator(figureSettings ?? throw new ArgumentNullException());
+
             _figureSettings = figureSettings;
-            _commander = commander;
+            _commander = commander ?? throw new ArgumentNullException();
         }
 
         public FigureSettings FigureSettings => (FigureSettings) _figureSettings.Clone();
