@@ -10,9 +10,9 @@ namespace Drawer3D.Model
     {
         private readonly DrawerAppSettings _appSettings;
 
-        private readonly FormValidator _formValidator;
+        private readonly FigureValidator _figureValidator;
 
-        private readonly FormSettings _formSettings;
+        private readonly FigureSettings _figureSettings;
 
         private SldWorks _app;
 
@@ -28,14 +28,14 @@ namespace Drawer3D.Model
 
         private bool _isFigureBuilt;
 
-        public Drawer(DrawerAppSettings appSettings, FormSettings formSettings)
+        public Drawer(DrawerAppSettings appSettings, FigureSettings figureSettings)
         {
             _appSettings = appSettings;
-            _formValidator = new FormValidator(formSettings);
-            _formSettings = formSettings;
+            _figureValidator = new FigureValidator(figureSettings);
+            _figureSettings = figureSettings;
         }
 
-        public FormSettings FormSettings => (FormSettings) _formSettings.Clone();
+        public FigureSettings FigureSettings => (FigureSettings) _figureSettings.Clone();
 
         public void KillApp()
         {
@@ -74,11 +74,11 @@ namespace Drawer3D.Model
                 throw new ArgumentNullException(nameof(figure));
             }
 
-            _formValidator.CheckSize(figure.X, Vector.X);
-            _formValidator.CheckSize(figure.Y, Vector.Y);
-            _formValidator.CheckSize(figure.Z, Vector.Z);
-            _formValidator.CheckWalls(figure.X, Vector.X, figure.WallsX, figure.Z);
-            _formValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
+            _figureValidator.CheckSize(figure.X, Vector.X);
+            _figureValidator.CheckSize(figure.Y, Vector.Y);
+            _figureValidator.CheckSize(figure.Z, Vector.Z);
+            _figureValidator.CheckWalls(figure.X, Vector.X, figure.WallsX, figure.Z);
+            _figureValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
         }
 
         public void BuildFigure(Figure figure)
@@ -90,7 +90,7 @@ namespace Drawer3D.Model
 
             if (_isFigureBuilt)
             {
-                _formValidator.ThrowFigureBuilt();
+                _figureValidator.ThrowFigureBuilt();
             }
 
             CheckConnection();
@@ -111,25 +111,25 @@ namespace Drawer3D.Model
             ClearSelection();
 
             ToggleSketchMode();
-            ExtrudeSketch(_formSettings.WallThickness);
+            ExtrudeSketch(_figureSettings.WallThickness);
 
-            SelectByPoint(x / (double) 2, y / (double) 2, _formSettings.WallThickness);
+            SelectByPoint(x / (double) 2, y / (double) 2, _figureSettings.WallThickness);
 
             ToggleSketchMode();
             CreateRectangleOnSketch(0, 0, 0, x, y, 0);
             ClearSelection();
 
-            CreateRectangleOnSketch(_formSettings.WallThickness
-                , _formSettings.WallThickness
+            CreateRectangleOnSketch(_figureSettings.WallThickness
+                , _figureSettings.WallThickness
                 , 0
-                , x - _formSettings.WallThickness
-                , y - _formSettings.WallThickness
+                , x - _figureSettings.WallThickness
+                , y - _figureSettings.WallThickness
                 , 0);
 
             ClearSelection();
 
             ToggleSketchMode();
-            ExtrudeSketch(z - _formSettings.WallThickness);
+            ExtrudeSketch(z - _figureSettings.WallThickness);
 
             _sizeX = x;
             _sizeY = y;
@@ -142,28 +142,28 @@ namespace Drawer3D.Model
                 return;
             }
 
-            var y1 = _formSettings.WallThickness;
-            var z = _formSettings.WallThickness;
+            var y1 = _figureSettings.WallThickness;
+            var z = _figureSettings.WallThickness;
 
             var y2 = vector switch
             {
-                Vector.X => _sizeY.Value - _formSettings.WallThickness,
+                Vector.X => _sizeY.Value - _figureSettings.WallThickness,
 
-                Vector.Y => _sizeX.Value - _formSettings.WallThickness,
+                Vector.Y => _sizeX.Value - _figureSettings.WallThickness,
 
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
 
-            SelectByPoint(_formSettings.WallThickness + 1
-                , _formSettings.WallThickness + 1
-                , _formSettings.WallThickness);
+            SelectByPoint(_figureSettings.WallThickness + 1
+                , _figureSettings.WallThickness + 1
+                , _figureSettings.WallThickness);
 
             ToggleSketchMode();
 
             foreach (var point in walls.Points)
             {
                 var x1 = point;
-                var x2 = point + _formSettings.WallThickness;
+                var x2 = point + _figureSettings.WallThickness;
 
                 switch (vector)
                 {
@@ -185,7 +185,7 @@ namespace Drawer3D.Model
         {
             if (_app == null || _document == null)
             {
-                _formValidator.ThrowAppNotConnected();
+                _figureValidator.ThrowAppNotConnected();
             }
         }
 

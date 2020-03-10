@@ -6,27 +6,27 @@ using Drawer3D.Model.Extensions;
 
 namespace Drawer3D.Model
 {
-    public class FormValidator
+    public class FigureValidator
     {
-        private readonly FormSettings _formSettings;
+        private readonly FigureSettings _figureSettings;
 
         private static readonly ResourceManager _resourceManager
-            = new ResourceManager(typeof(Resources.FormValidator));
+            = new ResourceManager(typeof(Resources.FigureValidator));
 
-        public FormValidator(FormSettings formSettings)
+        public FigureValidator(FigureSettings figureSettings)
         {
-            _formSettings = formSettings ?? throw new ArgumentNullException();
+            _figureSettings = figureSettings ?? throw new ArgumentNullException();
         }
 
         public void ThrowFigureBuilt()
         {
-            throw new FormException("project", _resourceManager
+            throw new FigureException("project", _resourceManager
                 .GetFormattedString("FigureBuilt"));
         }
 
         public void ThrowAppNotConnected()
         {
-            throw new FormException("project", _resourceManager
+            throw new FigureException("project", _resourceManager
                 .GetFormattedString("AppNotConnected"));
         }
 
@@ -34,9 +34,9 @@ namespace Drawer3D.Model
         {
             return vector switch
             {
-                Vector.X => _formSettings.MinLengthBetweenWallsX,
+                Vector.X => _figureSettings.MinLengthBetweenWallsX,
 
-                Vector.Y => _formSettings.MinLengthBetweenWallsY,
+                Vector.Y => _figureSettings.MinLengthBetweenWallsY,
 
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
@@ -46,7 +46,7 @@ namespace Drawer3D.Model
         {
             CheckSize(size, vector);
             var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
-            return size - (minLengthBetweenWalls + _formSettings.WallThickness * 3);
+            return size - (minLengthBetweenWalls + _figureSettings.WallThickness * 3);
         }
 
         public int GetMaxCountWalls(int size, Vector vector)
@@ -56,8 +56,8 @@ namespace Drawer3D.Model
             var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector);
 
             var countWalls =
-                (size - _formSettings.WallThickness * 2) /
-                (double) (minLengthBetweenWalls + _formSettings.WallThickness);
+                (size - _figureSettings.WallThickness * 2) /
+                (double) (minLengthBetweenWalls + _figureSettings.WallThickness);
 
             return (int) countWalls - 1;
         }
@@ -70,18 +70,18 @@ namespace Drawer3D.Model
             switch (vector)
             {
                 case Vector.X:
-                    minSize = _formSettings.SizeX.Min;
-                    maxSize = _formSettings.SizeX.Max;
+                    minSize = _figureSettings.SizeX.Min;
+                    maxSize = _figureSettings.SizeX.Max;
                     break;
 
                 case Vector.Y:
-                    minSize = _formSettings.SizeY.Min;
-                    maxSize = _formSettings.SizeY.Max;
+                    minSize = _figureSettings.SizeY.Min;
+                    maxSize = _figureSettings.SizeY.Max;
                     break;
 
                 case Vector.Z:
-                    minSize = _formSettings.SizeZ.Min;
-                    maxSize = _formSettings.SizeZ.Max;
+                    minSize = _figureSettings.SizeZ.Min;
+                    maxSize = _figureSettings.SizeZ.Max;
                     break;
 
                 default:
@@ -91,7 +91,7 @@ namespace Drawer3D.Model
             if (size < minSize || size > maxSize)
             {
                 var nameVector = vector.GetEnumDescription();
-                throw new FormException($"size{nameVector}"
+                throw new FigureException($"size{nameVector}"
                     , _resourceManager.GetFormattedString("SizeVector"
                         , nameVector
                         , minSize
@@ -108,13 +108,13 @@ namespace Drawer3D.Model
             }
 
             CheckSize(sizeVectorZ, Vector.Z);
-            var maxHeight = sizeVectorZ - _formSettings.WallThickness;
-            var minHeight = _formSettings.WallThickness;
+            var maxHeight = sizeVectorZ - _figureSettings.WallThickness;
+            var minHeight = _figureSettings.WallThickness;
 
             var vectorName = vector.GetEnumDescription();
             if (walls.Height < minHeight || walls.Height > maxHeight)
             {
-                throw new FormException($"heightWalls{vectorName}"
+                throw new FigureException($"heightWalls{vectorName}"
                     , _resourceManager.GetFormattedString("HeightWalls"
                         , vectorName
                         , minHeight
@@ -124,7 +124,7 @@ namespace Drawer3D.Model
             var maxCountWallsX = GetMaxCountWalls(size, vector);
             if (walls.Points.Count > maxCountWallsX)
             {
-                throw new FormException($"countWalls{vectorName}"
+                throw new FigureException($"countWalls{vectorName}"
                     ,
                     _resourceManager.GetFormattedString("MaxCountWalls"
                         , vectorName
@@ -155,11 +155,11 @@ namespace Drawer3D.Model
             CheckBorderPoint(size, lastPoint.Value, vector, errorKey);
 
             var minLengthBetweenWalls = GetMinLengthBetweenWalls(vector) +
-                                        _formSettings.WallThickness;
+                                        _figureSettings.WallThickness;
 
             if (point - lastPoint < minLengthBetweenWalls)
             {
-                throw new FormException(errorKey
+                throw new FigureException(errorKey
                     , _resourceManager.GetFormattedString("PointsInterval"
                         , lastPoint
                         , point
@@ -171,14 +171,14 @@ namespace Drawer3D.Model
         private void CheckBorderPoint(int size, int point, Vector vector, string errorKey)
         {
             var maxPoint = GetMaxLengthBetweenWalls(size, vector) +
-                           _formSettings.WallThickness;
+                           _figureSettings.WallThickness;
 
             var minPoint = GetMinLengthBetweenWalls(vector) +
-                           _formSettings.WallThickness;
+                           _figureSettings.WallThickness;
 
             if (point < minPoint || point > maxPoint)
             {
-                throw new FormException(errorKey
+                throw new FigureException(errorKey
                     , _resourceManager.GetFormattedString("PointBorder"
                         , point
                         , vector.GetEnumDescription()

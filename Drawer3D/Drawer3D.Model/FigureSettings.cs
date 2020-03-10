@@ -2,7 +2,7 @@
 
 namespace Drawer3D.Model
 {
-    public class FormSettings : ICloneable
+    public class FigureSettings : ICloneable
     {
         private int _minLengthBetweenWallsY = 20;
 
@@ -66,7 +66,7 @@ namespace Drawer3D.Model
 
         public object Clone()
         {
-            return new FormSettings
+            return new FigureSettings
             {
                 MinLengthBetweenWallsX = MinLengthBetweenWallsX,
                 MinLengthBetweenWallsY = MinLengthBetweenWallsY,

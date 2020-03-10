@@ -50,7 +50,7 @@ namespace Drawer3D.View
 
         private void InitializeDrawer()
         {
-            _drawer = new Drawer(GetDrawerAppSettings(), new FormSettings());
+            _drawer = new Drawer(GetDrawerAppSettings(), new FigureSettings());
         }
 
         private DrawerAppSettings GetDrawerAppSettings()
@@ -86,9 +86,9 @@ namespace Drawer3D.View
                 {
                     _drawer.CheckFigure(GetFigure());
                 }
-                catch (FormException exception)
+                catch (FigureException exception)
                 {
-                    HandleFormException(exception);
+                    HandleFigureException(exception);
                 }
             }
         }
@@ -121,9 +121,9 @@ namespace Drawer3D.View
             {
                 _drawer.BuildFigure(GetFigure());
             }
-            catch (FormException exception)
+            catch (FigureException exception)
             {
-                HandleFormException(exception);
+                HandleFigureException(exception);
             }
         }
 
@@ -285,11 +285,11 @@ namespace Drawer3D.View
                 fullGroupBoxHeight + 5);
         }
 
-        private void HandleFormException(FormException exception)
+        private void HandleFigureException(FigureException exception)
         {
             _errorProvider.Clear();
             Control control;
-            switch (exception.FormError.Key)
+            switch (exception.FigureError.Key)
             {
                 case "sizeX":
                     control = _textBoxBaseX;
@@ -319,7 +319,7 @@ namespace Drawer3D.View
                     break;
                 }
                 default:
-                    MessageBox.Show(exception.FormError.Message,
+                    MessageBox.Show(exception.FigureError.Message,
                         string.Empty,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
@@ -327,7 +327,7 @@ namespace Drawer3D.View
                     return;
             }
 
-            _errorProvider.SetError(control, exception.FormError.Message);
+            _errorProvider.SetError(control, exception.FigureError.Message);
         }
 
         private void MenuProjectNew_Click(object sender, EventArgs e)
