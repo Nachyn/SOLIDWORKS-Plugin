@@ -1,6 +1,7 @@
 ﻿using System;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Extensions;
+using Drawer3D.Model.Interfaces;
 
 namespace Drawer3D.Model
 {
@@ -10,13 +11,13 @@ namespace Drawer3D.Model
 
         private readonly FigureSettings _figureSettings;
 
-        private readonly SolidWorksCommander _commander;
+        private readonly ISolidWorksCommander _commander;
 
         private int? _sizeX;
 
         private int? _sizeY;
 
-        public Drawer(FigureSettings figureSettings, SolidWorksCommander commander)
+        public Drawer(FigureSettings figureSettings, ISolidWorksCommander commander)
         {
             _figureValidator = new FigureValidator(figureSettings);
             _figureSettings = figureSettings;

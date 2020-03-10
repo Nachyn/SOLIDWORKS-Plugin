@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using Drawer3D.Model.Extensions;
+using Drawer3D.Model.Interfaces;
 using SolidWorks.Interop.sldworks;
 
 namespace Drawer3D.Model
 {
-    public class SolidWorksCommander 
+    public class SolidWorksCommander : ISolidWorksCommander
     {
         private const string TopAxisName = "Сверху";
 

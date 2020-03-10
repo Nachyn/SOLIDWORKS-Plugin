@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawer.cs" />
+    <Compile Include="Interfaces\ISolidWorksCommander.cs" />
     <Compile Include="SolidWorksSettings.cs" />
     <Compile Include="Enums\Vector.cs" />
     <Compile Include="Exceptions\FigureError.cs" />
