@@ -85,7 +85,7 @@ namespace Drawer3D.Model.Tests
         }
     }
 
-    public class FigureValidatorTestsData
+    public static class FigureValidatorTestsData
     {
         public static readonly FigureSettings FigureSettings = new FigureSettings
         {
