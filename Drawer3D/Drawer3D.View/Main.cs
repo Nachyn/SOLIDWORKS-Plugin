@@ -50,7 +50,8 @@ namespace Drawer3D.View
 
         private void InitializeDrawer()
         {
-            _drawer = new Drawer(GetDrawerAppSettings(), new FigureSettings());
+            _drawer = new Drawer(new FigureSettings(),
+                new SolidWorksCommander(GetDrawerAppSettings()));
         }
 
         private DrawerAppSettings GetDrawerAppSettings()

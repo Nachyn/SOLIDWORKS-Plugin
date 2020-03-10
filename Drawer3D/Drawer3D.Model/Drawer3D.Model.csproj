@@ -66,6 +66,7 @@
       <DependentUpon>FigureValidator.resx</DependentUpon>
     </Compile>
     <Compile Include="SizeRange.cs" />
+    <Compile Include="SolidWorksCommander.cs" />
     <Compile Include="Walls.cs" />
   </ItemGroup>
   <ItemGroup>

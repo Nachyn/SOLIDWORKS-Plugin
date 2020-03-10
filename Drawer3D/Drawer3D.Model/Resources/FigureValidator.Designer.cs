@@ -70,15 +70,6 @@ namespace Drawer3D.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фигура уже построена..
-        /// </summary>
-        public static string FigureBuilt {
-            get {
-                return ResourceManager.GetString("FigureBuilt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Высота стен вектора {0} может быть от {1} до {2}..
         /// </summary>
         public static string HeightWalls {

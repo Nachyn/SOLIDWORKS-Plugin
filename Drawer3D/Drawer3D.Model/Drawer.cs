@@ -1,71 +1,29 @@
 ﻿using System;
-using System.Diagnostics;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Extensions;
-using SolidWorks.Interop.sldworks;
 
 namespace Drawer3D.Model
 {
     public class Drawer
     {
-        private readonly DrawerAppSettings _appSettings;
-
         private readonly FigureValidator _figureValidator;
 
         private readonly FigureSettings _figureSettings;
 
-        private SldWorks _app;
-
-        private IModelDoc2 _document;
-
-        private const string TopAxisName = "Сверху";
-
-        private const string SelectionAxisType = "PLANE";
+        private readonly SolidWorksCommander _commander;
 
         private int? _sizeX;
 
         private int? _sizeY;
 
-        private bool _isFigureBuilt;
-
-        public Drawer(DrawerAppSettings appSettings, FigureSettings figureSettings)
+        public Drawer(FigureSettings figureSettings, SolidWorksCommander commander)
         {
-            _appSettings = appSettings;
             _figureValidator = new FigureValidator(figureSettings);
             _figureSettings = figureSettings;
+            _commander = commander;
         }
 
         public FigureSettings FigureSettings => (FigureSettings) _figureSettings.Clone();
-
-        public void KillApp()
-        {
-            var processes = Process.GetProcessesByName(_appSettings.Name);
-            foreach (var process in processes)
-            {
-                process.CloseMainWindow();
-                process.Kill();
-            }
-        }
-
-        public void ConnectToApp()
-        {
-            var appInstance = Activator.CreateInstance(
-                Type.GetTypeFromCLSID(_appSettings.Guid));
-
-            _app = (SldWorks) appInstance;
-            _app.Visible = true;
-
-            _app.NewPart();
-            _document = _app.IActiveDoc2;
-
-            _isFigureBuilt = false;
-        }
-
-        public void SaveToFile(string filePath)
-        {
-            CheckConnection();
-            _document.SaveAs3(filePath, 0, 0);
-        }
 
         public void CheckFigure(Figure figure)
         {
@@ -88,48 +46,82 @@ namespace Drawer3D.Model
                 throw new ArgumentNullException(nameof(figure));
             }
 
-            if (_isFigureBuilt)
+            CheckConnection();
+            if (_commander.BuildedPartFiguresCount > 0)
             {
-                _figureValidator.ThrowFigureBuilt();
+                DeleteFigure();
             }
 
-            CheckConnection();
             CheckFigure(figure);
 
             CreateBase(figure.X, figure.Y, figure.Z);
             CreateWalls(figure.WallsX, Vector.X);
             CreateWalls(figure.WallsY, Vector.Y);
-            _isFigureBuilt = true;
+        }
+
+        public void ConnectToApp()
+        {
+            _commander.ConnectToApp();
+        }
+
+        public void SaveToFile(string filePath)
+        {
+            CheckConnection();
+            _commander.SaveToFile(filePath);
+        }
+
+        private void DeleteFigure()
+        {
+            _commander.ClearSelection();
+            for (var i = _commander.BuildedPartFiguresCount - 3;
+                i <= _commander.BuildedPartFiguresCount;
+                i++)
+            {
+                _commander.SelectPartFigure(i);
+            }
+
+            _commander.DeleteSelections();
+
+            _commander.ClearSelection();
+            for (var i = _commander.BuildedPartFiguresCount - 3;
+                i <= _commander.BuildedPartFiguresCount;
+                i++)
+            {
+                _commander.SelectSketch(i);
+            }
+
+            _commander.DeleteSelections();
         }
 
         private void CreateBase(int x, int y, int z)
         {
-            SelectTopAxis();
+            _commander.SelectTopAxis();
 
-            ToggleSketchMode();
-            CreateRectangleOnSketch(0, 0, 0, x, y, 0);
-            ClearSelection();
+            _commander.ToggleSketchMode();
+            _commander.CreateRectangleOnSketch(0, 0, 0, x, y, 0);
+            _commander.ClearSelection();
 
-            ToggleSketchMode();
-            ExtrudeSketch(_figureSettings.WallThickness);
+            _commander.ToggleSketchMode();
+            _commander.ExtrudeSketch(_figureSettings.WallThickness);
 
-            SelectByPoint(x / (double) 2, y / (double) 2, _figureSettings.WallThickness);
+            _commander.SelectByPoint(x / (double) 2, y / (double) 2,
+                _figureSettings.WallThickness);
 
-            ToggleSketchMode();
-            CreateRectangleOnSketch(0, 0, 0, x, y, 0);
-            ClearSelection();
+            _commander.ToggleSketchMode();
+            _commander.CreateRectangleOnSketch(0, 0, 0, x, y, 0);
+            _commander.ClearSelection();
 
-            CreateRectangleOnSketch(_figureSettings.WallThickness
+            _commander.CreateRectangleOnSketch(_figureSettings.WallThickness
                 , _figureSettings.WallThickness
                 , 0
                 , x - _figureSettings.WallThickness
                 , y - _figureSettings.WallThickness
                 , 0);
 
-            ClearSelection();
+            _commander.ClearSelection();
 
-            ToggleSketchMode();
-            ExtrudeSketch(z - _figureSettings.WallThickness);
+            _commander.ToggleSketchMode();
+            _commander.ExtrudeSketch(z - _figureSettings.WallThickness);
 
             _sizeX = x;
             _sizeY = y;
@@ -154,11 +146,11 @@ namespace Drawer3D.Model
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
 
-            SelectByPoint(_figureSettings.WallThickness + 1
+            _commander.SelectByPoint(_figureSettings.WallThickness + 1
                 , _figureSettings.WallThickness + 1
                 , _figureSettings.WallThickness);
 
-            ToggleSketchMode();
+            _commander.ToggleSketchMode();
 
             foreach (var point in walls.Points)
             {
@@ -168,70 +160,27 @@ namespace Drawer3D.Model
                 switch (vector)
                 {
                     case Vector.X:
-                        CreateRectangleOnSketch(x1, y1, z, x2, y2, z);
+                        _commander.CreateRectangleOnSketch(x1, y1, z, x2, y2, z);
                         break;
                     case Vector.Y:
-                        CreateRectangleOnSketch(y1, x1, z, y2 + 0.00001, x2, z);
+                        _commander.CreateRectangleOnSketch(y1, x1, z, y2 + 0.00001, x2,
+                            z);
+
                         break;
                 }
 
-                ClearSelection();
+                _commander.ClearSelection();
             }
 
-            ExtrudeSketch(walls.Height);
+            _commander.ExtrudeSketch(walls.Height);
         }
 
         private void CheckConnection()
         {
-            if (_app == null || _document == null)
+            if (!_commander.IsConnectedToApp)
             {
                 _figureValidator.ThrowAppNotConnected();
             }
-        }
-
-        private void ExtrudeSketch(double height)
-        {
-            var convertedHeight = height.ToMilli();
-
-            _document.FeatureManager.FeatureExtrusion2(true, false, false, 0, 0,
-                convertedHeight, convertedHeight, false, false,
-                false, false, 0, 0, false, false, false,
-                false, true, true, true, 0, 0, false);
-
-            _document.ISelectionManager.EnableContourSelection = false;
-            ClearSelection();
-        }
-
-        private void SelectByPoint(double pointX, double pointY, double pointZ)
-        {
-            _document.Extension.SelectByRay(pointX.ToMilli(),
-                pointZ.ToMilli(),
-                -pointY.ToMilli(),
-                1, 1, 1, 1, 2, false, 0, 0);
-        }
-
-        private void SelectTopAxis()
-        {
-            _document.Extension.SelectByID2(TopAxisName, SelectionAxisType,
-                0, 0, 0, false, 0, null, 0);
-        }
-
-        private void ToggleSketchMode()
-        {
-            _document.SketchManager.InsertSketch(true);
-        }
-
-        private void CreateRectangleOnSketch(double x1, double y1, double z1,
-            double x2, double y2, double z2)
-        {
-            _document.SketchManager.CreateCornerRectangle(x1.ToMilli(), y1.ToMilli(),
-                z1.ToMilli(), x2.ToMilli(),
-                y2.ToMilli(), z2.ToMilli());
-        }
-
-        private void ClearSelection()
-        {
-            _document.ClearSelection2(true);
         }
     }
 }

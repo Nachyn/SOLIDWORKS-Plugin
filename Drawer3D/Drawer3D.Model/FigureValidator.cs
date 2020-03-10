@@ -18,12 +18,6 @@ namespace Drawer3D.Model
             _figureSettings = figureSettings ?? throw new ArgumentNullException();
         }
 
-        public void ThrowFigureBuilt()
-        {
-            throw new FigureException("project", _resourceManager
-                .GetFormattedString("FigureBuilt"));
-        }
-
         public void ThrowAppNotConnected()
         {
             throw new FigureException("project", _resourceManager

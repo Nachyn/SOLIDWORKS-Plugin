@@ -120,9 +120,6 @@
   <data name="AppNotConnected" xml:space="preserve">
     <value>Необходимо создать проект.</value>
   </data>
-  <data name="FigureBuilt" xml:space="preserve">
-    <value>Фигура уже построена.</value>
-  </data>
   <data name="HeightWalls" xml:space="preserve">
     <value>Высота стен вектора {0} может быть от {1} до {2}.</value>
   </data>
