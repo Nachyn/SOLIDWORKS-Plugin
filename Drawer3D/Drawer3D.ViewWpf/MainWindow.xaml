@@ -4,10 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Drawer3D.ViewWpf"
+        xmlns:vm="clr-namespace:Drawer3D.ViewWpf.ViewModels"
         mc:Ignorable="d"
         Title="Drawer3D" Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow">
+    <Window.DataContext>
+        <vm:ApplicationVm/>
+    </Window.DataContext>
     <Grid>
         
     </Grid>
