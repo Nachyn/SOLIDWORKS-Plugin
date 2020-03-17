@@ -6,9 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Drawer3D.Model;
 using Drawer3D.Model.Enums;
+using Drawer3D.ViewWpf.Annotations;
 using Drawer3D.ViewWpf.Commands;
 using Drawer3D.ViewWpf.Helpers;
-using Drawer3D.ViewWpf.Properties;
 
 namespace Drawer3D.ViewWpf.ViewModels
 {
@@ -16,14 +16,16 @@ namespace Drawer3D.ViewWpf.ViewModels
     {
         private readonly Figure _figure;
 
+        private readonly FigureSettings _figureSettings;
+
         private readonly FigureValidator _figureValidator;
 
         public FigureVm(Figure figure
             , FigureSettings figureSettings)
         {
             _figure = figure ?? throw new ArgumentNullException();
-            _figureValidator =
-                new FigureValidator(figureSettings ?? throw new ArgumentNullException());
+            _figureSettings = figureSettings ?? throw new ArgumentNullException();
+            _figureValidator = new FigureValidator(_figureSettings);
 
             if (_figure.WallsX == null)
             {
@@ -104,17 +106,21 @@ namespace Drawer3D.ViewWpf.ViewModels
                     case nameof(X):
                         _figureValidator.CheckSize(X, Vector.X);
                         break;
+
                     case nameof(Y):
                         _figureValidator.CheckSize(Y, Vector.Y);
                         break;
+
                     case nameof(Z):
                         _figureValidator.CheckSize(Z, Vector.Z);
                         break;
+
                     case nameof(HeightWallsX):
                         _figureValidator.CheckHeightWalls(HeightWallsX, Vector.X,
                             _figure.Z);
 
                         break;
+
                     case nameof(HeightWallsY):
                         _figureValidator.CheckHeightWalls(HeightWallsY, Vector.Y,
                             _figure.Z);
@@ -125,14 +131,32 @@ namespace Drawer3D.ViewWpf.ViewModels
 
         public RelayCommand AddWallPointX => new RelayCommand(obj =>
         {
-            WallPointsX.Add(new PointVm(WallPointsX.Count, _figure, _figureValidator,
-                Vector.X));
+            var pointVm = new PointVm(WallPointsX.Count
+                , _figure
+                , _figureValidator,
+                Vector.X);
+
+            WallPointsX.Add(pointVm);
+
+            if (obj is int value)
+            {
+                pointVm.Value = value;
+            }
         });
 
         public RelayCommand AddWallPointY => new RelayCommand(obj =>
         {
-            WallPointsY.Add(new PointVm(WallPointsY.Count, _figure, _figureValidator,
-                Vector.Y));
+            var pointVm = new PointVm(WallPointsY.Count
+                , _figure
+                , _figureValidator,
+                Vector.Y);
+
+            WallPointsY.Add(pointVm);
+
+            if (obj is int value)
+            {
+                pointVm.Value = value;
+            }
         });
 
         public RelayCommand RemoveLastWallPointX => new RelayCommand(obj =>
@@ -144,6 +168,33 @@ namespace Drawer3D.ViewWpf.ViewModels
             }
         });
 
+        public RelayCommand RemoveLastWallPointY => new RelayCommand(obj =>
+        {
+            var lastPoint = WallPointsY.LastOrDefault();
+            if (lastPoint != null)
+            {
+                WallPointsY.Remove(lastPoint);
+            }
+        });
+
+        public RelayCommand SetDefaultValues => new RelayCommand(obj =>
+        {
+            X = _figureSettings.SizeX.Min;
+            Y = _figureSettings.SizeY.Min;
+            Z = _figureSettings.SizeZ.Min;
+            HeightWallsX = HeightWallsY = Z - _figureSettings.WallThickness;
+            for (var i = 25; i <= 100; i += 25)
+            {
+                AddWallPointX.Execute(i);
+                AddWallPointY.Execute(i);
+            }
+        });
+
+        public RelayCommand ClearValues => new RelayCommand(obj =>
+        {
+            X = Y = Z = HeightWallsX = HeightWallsY = 0;
+        });
+
         public string Error => throw new NotImplementedException();
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -152,14 +203,36 @@ namespace Drawer3D.ViewWpf.ViewModels
         protected virtual void OnPropertyChanged(
             [CallerMemberName] string propertyName = null)
         {
-            ClearPoints();
+            if (propertyName == nameof(Z))
+            {
+                CalculateWallsHeight();
+            }
+
+            switch (propertyName)
+            {
+                case nameof(HeightWallsX):
+                    WallPointsX.Clear();
+                    break;
+
+                case nameof(HeightWallsY):
+                    WallPointsY.Clear();
+                    break;
+
+                default:
+                    WallPointsX.Clear();
+                    WallPointsY.Clear();
+                    break;
+            }
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void ClearPoints()
+        private void CalculateWallsHeight()
         {
-            WallPointsX.Clear();
-            WallPointsY.Clear();
+            if (Z >= _figureSettings.SizeZ.Min)
+            {
+                HeightWallsY = HeightWallsX = Z - _figureSettings.WallThickness;
+            }
         }
 
         private void WallPointsY_CollectionChanged(object sender,

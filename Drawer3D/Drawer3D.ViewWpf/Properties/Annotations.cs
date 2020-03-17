@@ -33,7 +33,7 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
-namespace Drawer3D.ViewWpf.Properties
+namespace Drawer3D.ViewWpf.Annotations
 {
     /// <summary>
     ///     Indicates that the value of the marked element could be <c>null</c> sometimes,

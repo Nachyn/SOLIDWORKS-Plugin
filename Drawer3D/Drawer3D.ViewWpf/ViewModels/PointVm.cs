@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Drawer3D.Model;
 using Drawer3D.Model.Enums;
+using Drawer3D.ViewWpf.Annotations;
 using Drawer3D.ViewWpf.Helpers;
-using Drawer3D.ViewWpf.Properties;
 
 namespace Drawer3D.ViewWpf.ViewModels
 {
