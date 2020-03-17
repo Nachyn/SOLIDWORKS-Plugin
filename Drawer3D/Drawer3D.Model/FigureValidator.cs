@@ -93,6 +93,23 @@ namespace Drawer3D.Model
             }
         }
 
+        public void CheckHeightWalls(int height, Vector vector, int sizeVectorZ)
+        {
+            CheckSize(sizeVectorZ, Vector.Z);
+            var maxHeight = sizeVectorZ - _figureSettings.WallThickness;
+            var minHeight = _figureSettings.WallThickness;
+
+            var vectorName = vector.GetEnumDescription();
+            if (height < minHeight || height > maxHeight)
+            {
+                throw new FigureException($"heightWalls{vectorName}"
+                    , _resourceManager.GetFormattedString("HeightWalls"
+                        , vectorName
+                        , minHeight
+                        , maxHeight));
+            }
+        }
+
         public void CheckWalls(int size, Vector vector, Walls walls,
             int sizeVectorZ)
         {
@@ -101,19 +118,8 @@ namespace Drawer3D.Model
                 return;
             }
 
-            CheckSize(sizeVectorZ, Vector.Z);
-            var maxHeight = sizeVectorZ - _figureSettings.WallThickness;
-            var minHeight = _figureSettings.WallThickness;
-
             var vectorName = vector.GetEnumDescription();
-            if (walls.Height < minHeight || walls.Height > maxHeight)
-            {
-                throw new FigureException($"heightWalls{vectorName}"
-                    , _resourceManager.GetFormattedString("HeightWalls"
-                        , vectorName
-                        , minHeight
-                        , maxHeight));
-            }
+            CheckHeightWalls(walls.Height, vector, sizeVectorZ);
 
             var maxCountWallsX = GetMaxCountWalls(size, vector);
             if (walls.Points.Count > maxCountWallsX)
