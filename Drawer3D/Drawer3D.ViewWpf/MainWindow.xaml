@@ -6,13 +6,266 @@
         xmlns:local="clr-namespace:Drawer3D.ViewWpf"
         xmlns:vm="clr-namespace:Drawer3D.ViewWpf.ViewModels"
         mc:Ignorable="d"
-        Title="Drawer3D" Height="450" Width="800"
+        Title="Drawer3D"
+        Height="400"
+        Width="300"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow">
+        WindowStyle="ToolWindow"
+        MaxWidth="800">
     <Window.DataContext>
-        <vm:ApplicationVm/>
+        <vm:ApplicationVm />
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="2" />
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground"
+                            Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin"
+                    Value="2" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Margin"
+                    Value="0 5 0 5" />
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Основание ( мм )"
+                  Margin="5">
+            <Grid DataContext="{Binding Figure}">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Длина"
+                           HorizontalAlignment="Center" />
+                <TextBox Width="70"
+                         Grid.Row="0"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="X"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Ширина"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           HorizontalAlignment="Center" />
+                <TextBox Width="70"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Y"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Высота"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           HorizontalAlignment="Center" />
+                <TextBox Width="70"
+                         Grid.Row="2"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Z"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Сетка ( мм )"
+                  Grid.Row="1"
+                  Margin="5">
+            <Grid x:Name="PointsLayout">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Вдоль длины"
+                           Grid.Column="1"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Вдоль ширины"
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           HorizontalAlignment="Center" />
+
+                <TextBlock Text="Высота"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           HorizontalAlignment="Center" />
+                <TextBox Width="70"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Figure.HeightWallsX"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBox Width="70"
+                         Grid.Row="1"
+                         Grid.Column="2"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Figure.HeightWallsY"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Стены"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           HorizontalAlignment="Center" />
+                <StackPanel Grid.Row="2"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Content="+"
+                            Width="33"
+                            Command="{Binding Figure.AddWallPointX}" />
+                    <Button Content="-"
+                            Width="33"
+                            Command="{Binding Figure.RemoveLastWallPointX}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2"
+                            Grid.Column="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Content="+"
+                            Width="33"
+                            Command="{Binding Figure.AddWallPointY}" />
+                    <Button Content="-"
+                            Width="33" />
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding Figure.WallPointsX}"
+                         Grid.Column="1"
+                         Grid.Row="3"
+                         BorderThickness="0"
+                         HorizontalAlignment="Center"
+                         MaxHeight="200"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Width="70"
+                                     Margin="0"
+                                     TextChanged="TextBoxPointX_TextChanged"
+                                     Loaded="TextBoxPointX_Loaded"
+                                     Unloaded="TextBoxPointX_Unloaded">
+                                <TextBox.Text>
+                                    <Binding Path="Value"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="Explicit">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox ItemsSource="{Binding Figure.WallPointsY}"
+                         Grid.Column="2"
+                         Grid.Row="3"
+                         BorderThickness="0"
+                         HorizontalAlignment="Center"
+                         MaxHeight="200"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Width="70"
+                                     Margin="0"
+                                     TextChanged="TextBoxPointY_TextChanged"
+                                     Loaded="TextBoxPointY_Loaded"
+                                     Unloaded="TextBoxPointY_Unloaded">
+                                <TextBox.Text>
+                                    <Binding Path="Value"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="Explicit">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button Grid.Column="2"
+                        Grid.Row="4"
+                        Content="Построить"
+                        Command="{Binding BuildFigure}" />
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
