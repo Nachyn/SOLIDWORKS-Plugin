@@ -8,15 +8,17 @@ namespace Drawer3D.ViewWpf.ViewModels
     {
         private Drawer _drawer;
 
+        private Figure _figure;
+
+        public FigureVm Figure { get; }
+
         public ApplicationVm()
         {
-            InitializeDrawer();
-        }
+            var figureSettings = new FigureSettings();
+            _drawer = new Drawer(figureSettings
+                , new SolidWorksCommander(GetSolidWorksSettings()));
 
-        private void InitializeDrawer()
-        {
-            _drawer = new Drawer(new FigureSettings(),
-                new SolidWorksCommander(GetSolidWorksSettings()));
+            Figure = new FigureVm(_figure = new Figure(), figureSettings);
         }
 
         private SolidWorksSettings GetSolidWorksSettings()
