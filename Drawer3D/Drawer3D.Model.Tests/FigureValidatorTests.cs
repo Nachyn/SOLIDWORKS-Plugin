@@ -83,6 +83,21 @@ namespace Drawer3D.Model.Tests
             Assert.Throws<FigureException>(() =>
                 _figureValidator.CheckWalls(size, vector, walls, sizeVectorZ));
         }
+
+        [TestCaseSource(typeof(FigureValidatorTestsData)
+            , nameof(FigureValidatorTestsData.HeightWalls))]
+        public void CheckHeightWalls(int height, Vector vector, int sizeVectorZ)
+        {
+            _figureValidator.CheckHeightWalls(height, vector, sizeVectorZ);
+        }
+
+        [TestCaseSource(typeof(FigureValidatorTestsData)
+            , nameof(FigureValidatorTestsData.HeightWallsNegative))]
+        public void CheckHeightWalls_Negative(int height, Vector vector, int sizeVectorZ)
+        {
+            Assert.Throws<FigureException>(() =>
+                _figureValidator.CheckHeightWalls(height, vector, sizeVectorZ));
+        }
     }
 
     public static class FigureValidatorTestsData
@@ -181,6 +196,30 @@ namespace Drawer3D.Model.Tests
 
                 yield return new TestCaseData(400, Vector.Y,
                     new Walls {Height = 5, Points = new List<int> {75, 76, 100}}, 50);
+            }
+        }
+
+        public static IEnumerable HeightWalls
+        {
+            get
+            {
+                yield return new TestCaseData(145, Vector.X, 150);
+                yield return new TestCaseData(135, Vector.X, 140);
+                yield return new TestCaseData(100, Vector.X, 150);
+                yield return new TestCaseData(45, Vector.Y, 50);
+                yield return new TestCaseData(55, Vector.Y, 60);
+                yield return new TestCaseData(65, Vector.Y, 70);
+            }
+        }
+
+        public static IEnumerable HeightWallsNegative
+        {
+            get
+            {
+                yield return new TestCaseData(0, Vector.X, 0);
+                yield return new TestCaseData(50, Vector.Y, 50);
+                yield return new TestCaseData(101, Vector.X, 100);
+                yield return new TestCaseData(149, Vector.X, 150);
             }
         }
     }
