@@ -10,9 +10,9 @@ namespace Drawer3D.Model.Tests
 {
     public class DrawerTests
     {
-        private Drawer _drawer;
-
         private ISolidWorksCommander _commander;
+
+        private Drawer _drawer;
 
         [SetUp]
         public void InitializeTest()
@@ -40,6 +40,13 @@ namespace Drawer3D.Model.Tests
             _drawer.CheckFigure(figure);
         }
 
+        [Test]
+        public void CheckFigureTest_NullArgumentNegative()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _drawer.CheckFigure(null));
+        }
+
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
         public void CheckFigureTest_Negative(Figure figure)
         {
@@ -50,6 +57,28 @@ namespace Drawer3D.Model.Tests
         public void BuildFigureTest(Figure figure)
         {
             _drawer.BuildFigure(figure);
+        }
+
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        public void RebuildFigureTest(Figure figure)
+        {
+            _commander.BuildedPartFiguresCount.Returns(1);
+            _drawer.BuildFigure(figure);
+        }
+
+        [Test]
+        public void BuildFigureTest_NullArgumentNegative()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _drawer.BuildFigure(null));
+        }
+
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        public void CheckConnectionTest_Negative(Figure figure)
+        {
+            _commander.IsConnectedToApp.Returns(false);
+            Assert.Throws<FigureException>(() =>
+                _drawer.BuildFigure(figure));
         }
 
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
@@ -88,31 +117,18 @@ namespace Drawer3D.Model.Tests
                 yield return new TestCaseData(new Figure {X = 400, Y = 400, Z = 150});
                 yield return new TestCaseData(new Figure
                 {
-                    X = 350,
-                    Y = 300,
-                    Z = 100,
-                    WallsX = new Walls
+                    X = 350, Y = 300, Z = 100, WallsX = new Walls
                     {
-                        Height = 95,
-                        Points = new List<int>
+                        Height = 95, Points = new List<int>
                         {
-                            25,
-                            75,
-                            100,
-                            125,
-                            150
+                            25, 75, 100, 125, 150
                         }
-                    },
-                    WallsY = new Walls
+                    }
+                    , WallsY = new Walls
                     {
-                        Height = 95,
-                        Points = new List<int>
+                        Height = 95, Points = new List<int>
                         {
-                            25,
-                            75,
-                            100,
-                            125,
-                            150
+                            25, 75, 100, 125, 150
                         }
                     }
                 });
@@ -127,31 +143,18 @@ namespace Drawer3D.Model.Tests
                 yield return new TestCaseData(new Figure {X = -1, Y = -1, Z = 0});
                 yield return new TestCaseData(new Figure
                 {
-                    X = 350,
-                    Y = 300,
-                    Z = 100,
-                    WallsX = new Walls
+                    X = 350, Y = 300, Z = 100, WallsX = new Walls
                     {
-                        Height = 95,
-                        Points = new List<int>
+                        Height = 95, Points = new List<int>
                         {
-                            25,
-                            25,
-                            100,
-                            125,
-                            150
+                            25, 25, 100, 125, 150
                         }
-                    },
-                    WallsY = new Walls
+                    }
+                    , WallsY = new Walls
                     {
-                        Height = 95,
-                        Points = new List<int>
+                        Height = 95, Points = new List<int>
                         {
-                            25,
-                            26,
-                            100,
-                            125,
-                            150
+                            25, 26, 100, 125, 150
                         }
                     }
                 });

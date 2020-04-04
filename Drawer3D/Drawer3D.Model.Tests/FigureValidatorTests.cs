@@ -85,6 +85,15 @@ namespace Drawer3D.Model.Tests
         }
 
         [TestCaseSource(typeof(FigureValidatorTestsData)
+            , nameof(FigureValidatorTestsData.WallsCountNegative))]
+        public void CheckWallsTest_CountNegative(int size, Vector vector
+            , Walls walls, int sizeVectorZ)
+        {
+            Assert.Throws<FigureException>(() =>
+                _figureValidator.CheckWalls(size, vector, walls, sizeVectorZ));
+        }
+
+        [TestCaseSource(typeof(FigureValidatorTestsData)
             , nameof(FigureValidatorTestsData.HeightWalls))]
         public void CheckHeightWalls(int height, Vector vector, int sizeVectorZ)
         {
@@ -104,12 +113,9 @@ namespace Drawer3D.Model.Tests
     {
         public static readonly FigureSettings FigureSettings = new FigureSettings
         {
-            MinLengthBetweenWallsX = 20,
-            MinLengthBetweenWallsY = 20,
-            SizeX = new SizeRange {Min = 200, Max = 400},
-            SizeY = new SizeRange {Min = 200, Max = 400},
-            SizeZ = new SizeRange {Min = 50, Max = 150},
-            WallThickness = 5
+            MinLengthBetweenWallsX = 20, MinLengthBetweenWallsY = 20, SizeX = new SizeRange {Min = 200, Max = 400}
+            , SizeY = new SizeRange {Min = 200, Max = 400}, SizeZ = new SizeRange {Min = 50, Max = 150}
+            , WallThickness = 5
         };
 
         public static IEnumerable MinLengthBetweenWallsX
@@ -195,9 +201,28 @@ namespace Drawer3D.Model.Tests
                     , 50);
 
                 yield return new TestCaseData(400, Vector.Y,
-                    new Walls {Height = 5, Points = new List<int> {75, 76, 100}}, 50);
+                    new Walls {Height = 5, Points = new List<int> {75, 76, 100}}
+                    , 50);
+
+                yield return new TestCaseData(400, Vector.Y,
+                    new Walls {Height = 5, Points = new List<int> {1, 2, 401}}
+                    , 50);
             }
         }
+
+        public static IEnumerable WallsCountNegative
+        {
+            get
+            {
+                yield return new TestCaseData(200, Vector.Y,
+                    new Walls {Height = 45, Points = new List<int> {25, 50, 75, 100, 125, 150, 175}}
+                    , 50);
+
+                yield return new TestCaseData(100, Vector.Y,
+                    new Walls {Height = 5, Points = new List<int> {25, 50, 75, 100, 125, 150, 175}}, 50);
+            }
+        }
+
 
         public static IEnumerable HeightWalls
         {

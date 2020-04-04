@@ -62,9 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DrawerTests.cs" />
+    <Compile Include="EnumerableExtensionsTests.cs" />
+    <Compile Include="FigureErrorTests.cs" />
+    <Compile Include="FigureExceptionTests.cs" />
     <Compile Include="FigureSettingsTests.cs" />
     <Compile Include="FigureValidatorTests.cs" />
+    <Compile Include="NumberExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceManagerExtensionsTests.cs" />
     <Compile Include="SolidWorksSettingsTests.cs" />
   </ItemGroup>
   <ItemGroup>

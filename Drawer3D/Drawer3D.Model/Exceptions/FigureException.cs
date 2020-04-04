@@ -11,11 +11,5 @@ namespace Drawer3D.Model.Exceptions
         {
             FigureError = new FigureError {Key = key, Message = message};
         }
-
-        public FigureException(FigureError figureError)
-            : base(figureError.Message)
-        {
-            FigureError = figureError;
-        }
     }
 }
