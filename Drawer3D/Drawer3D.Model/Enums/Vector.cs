@@ -2,15 +2,27 @@
 
 namespace Drawer3D.Model.Enums
 {
+    /// <summary>
+    ///     Проекция вектора на ось
+    /// </summary>
     public enum Vector
     {
-        [Description("X")] 
+        /// <summary>
+        ///     Вектор X
+        /// </summary>
+        [Description("X")]
         X,
 
-        [Description("Y")] 
+        /// <summary>
+        ///     Вектор Y
+        /// </summary>
+        [Description("Y")]
         Y,
 
-        [Description("Z")] 
+        /// <summary>
+        ///     Вектор Z
+        /// </summary>
+        [Description("Z")]
         Z
     }
 }

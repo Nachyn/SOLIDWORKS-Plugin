@@ -2,68 +2,111 @@
 
 namespace Drawer3D.Model
 {
+    /// <summary>
+    ///     Настройки фигуры
+    /// </summary>
     public class FigureSettings : ICloneable
     {
-        private int _minLengthBetweenWallsY = 20;
-
+        /// <summary>
+        ///     Минимальная длина между стенок вдоль вектора X
+        /// </summary>
         private int _minLengthBetweenWallsX = 20;
 
-        private int _wallThickness = 5;
+        /// <summary>
+        ///     Минимальная длина между стенок вдоль вектора Y
+        /// </summary>
+        private int _minLengthBetweenWallsY = 20;
 
+        /// <summary>
+        ///     Диапазон значений для длины
+        /// </summary>
         private SizeRange _sizeX = new SizeRange {Max = 400, Min = 200};
 
+        /// <summary>
+        ///     Диапазон значений для ширины
+        /// </summary>
         private SizeRange _sizeY = new SizeRange {Max = 400, Min = 200};
 
+        /// <summary>
+        ///     Диапазон значений для высоты
+        /// </summary>
         private SizeRange _sizeZ = new SizeRange {Max = 150, Min = 50};
 
+        /// <summary>
+        ///     Толщина стен
+        /// </summary>
+        private int _wallThickness = 5;
+
+        /// <summary>
+        ///     Диапазон значений для длины
+        /// </summary>
         public SizeRange SizeX
         {
             get => _sizeX;
             set => _sizeX = value ?? throw new ArgumentNullException();
         }
 
+        /// <summary>
+        ///     Диапазон значений для ширины
+        /// </summary>
         public SizeRange SizeY
         {
             get => _sizeY;
             set => _sizeY = value ?? throw new ArgumentNullException();
         }
 
+        /// <summary>
+        ///     Диапазон значений для высоты
+        /// </summary>
         public SizeRange SizeZ
         {
             get => _sizeZ;
             set => _sizeZ = value ?? throw new ArgumentNullException();
         }
 
+        /// <summary>
+        ///     Толщина стен
+        /// </summary>
         public int WallThickness
         {
             get => _wallThickness;
             set
             {
-                CheckPositiveArgumentArgument(value);
+                CheckPositiveArgument(value);
                 _wallThickness = value;
             }
         }
 
+        /// <summary>
+        ///     Минимальная длина между стенок вдоль вектора X
+        /// </summary>
         public int MinLengthBetweenWallsX
         {
             get => _minLengthBetweenWallsX;
             set
             {
-                CheckPositiveArgumentArgument(value);
+                CheckPositiveArgument(value);
                 _minLengthBetweenWallsX = value;
             }
         }
 
+        /// <summary>
+        ///     Минимальная длина между стенок вдоль вектора Y
+        /// </summary>
         public int MinLengthBetweenWallsY
         {
             get => _minLengthBetweenWallsY;
             set
             {
-                CheckPositiveArgumentArgument(value);
+                CheckPositiveArgument(value);
                 _minLengthBetweenWallsY = value;
             }
         }
 
+        /// <summary>
+        ///     Клонировать настройки
+        /// </summary>
+        /// <returns>Текущие настройки</returns>
         public object Clone()
         {
             return new FigureSettings
@@ -77,7 +120,11 @@ namespace Drawer3D.Model
             };
         }
 
-        private static void CheckPositiveArgumentArgument(int value)
+        /// <summary>
+        ///     Проверить на положительное значение
+        /// </summary>
+        /// <param name="value">Значение</param>
+        private static void CheckPositiveArgument(int value)
         {
             if (value > 0)
             {

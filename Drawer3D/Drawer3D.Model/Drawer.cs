@@ -5,19 +5,43 @@ using Drawer3D.Model.Interfaces;
 
 namespace Drawer3D.Model
 {
+    /// <summary>
+    ///     Построитель-рисовальщик фигуры
+    /// </summary>
     public class Drawer
     {
-        private readonly FigureValidator _figureValidator;
-
-        private readonly FigureSettings _figureSettings;
-
+        /// <summary>
+        ///     API Команды к программе SOLIDWORKS
+        /// </summary>
         private readonly ISolidWorksCommander _commander;
 
+        /// <summary>
+        ///     Настройки фигуры
+        /// </summary>
+        private readonly FigureSettings _figureSettings;
+
+        /// <summary>
+        ///     Валидатор фигуры
+        /// </summary>
+        private readonly FigureValidator _figureValidator;
+
+        /// <summary>
+        ///     Высота фигуры
+        /// </summary>
         private int? _sizeX;
 
+        /// <summary>
+        ///     Ширина фигуры
+        /// </summary>
         private int? _sizeY;
 
-        public Drawer(FigureSettings figureSettings, ISolidWorksCommander commander)
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
+        /// <param name="figureSettings">Настройки фигуры</param>
+        /// <param name="commander">API Команды к программе SOLIDWORKS</param>
+        public Drawer(FigureSettings figureSettings
+            , ISolidWorksCommander commander)
         {
             _figureValidator =
                 new FigureValidator(figureSettings ?? throw new ArgumentNullException());
@@ -26,8 +50,15 @@ namespace Drawer3D.Model
             _commander = commander ?? throw new ArgumentNullException();
         }
 
+        /// <summary>
+        ///     Настройки фигуры
+        /// </summary>
         public FigureSettings FigureSettings => (FigureSettings) _figureSettings.Clone();
 
+        /// <summary>
+        ///     Проверить фигуру
+        /// </summary>
+        /// <param name="figure">Параметры фигуры</param>
         public void CheckFigure(Figure figure)
         {
             if (figure == null)
@@ -42,6 +73,10 @@ namespace Drawer3D.Model
             _figureValidator.CheckWalls(figure.Y, Vector.Y, figure.WallsY, figure.Z);
         }
 
+        /// <summary>
+        ///     Построить фигуру
+        /// </summary>
+        /// <param name="figure">Параметры фигуры</param>
         public void BuildFigure(Figure figure)
         {
             if (figure == null)
@@ -62,17 +97,27 @@ namespace Drawer3D.Model
             CreateWalls(figure.WallsY, Vector.Y);
         }
 
+        /// <summary>
+        ///     Подключиться к программе SOLIDWORKS
+        /// </summary>
         public void ConnectToApp()
         {
             _commander.ConnectToApp();
         }
 
+        /// <summary>
+        ///     Сохранить проект
+        /// </summary>
+        /// <param name="filePath">Путь к файлу</param>
         public void SaveToFile(string filePath)
         {
             CheckConnection();
             _commander.SaveToFile(filePath);
         }
 
+        /// <summary>
+        ///     Удалить фигуру
+        /// </summary>
         private void DeleteFigure()
         {
             _commander.ClearSelection();
@@ -96,6 +141,12 @@ namespace Drawer3D.Model
             _commander.DeleteSelections();
         }
 
+        /// <summary>
+        ///     Построить основание фигуры
+        /// </summary>
+        /// <param name="x">Длина</param>
+        /// <param name="y">Ширина</param>
+        /// <param name="z">Высота</param>
         private void CreateBase(int x, int y, int z)
         {
             _commander.SelectTopAxis();
@@ -130,6 +181,11 @@ namespace Drawer3D.Model
             _sizeY = y;
         }
 
+        /// <summary>
+        ///     Построить стены вдоль вектора
+        /// </summary>
+        /// <param name="walls">Стены</param>
+        /// <param name="vector">Вектор</param>
         private void CreateWalls(Walls walls, Vector vector)
         {
             if (walls == null || walls.Points.IsNullOrEmpty())
@@ -178,6 +234,9 @@ namespace Drawer3D.Model
             _commander.ExtrudeSketch(walls.Height);
         }
 
+        /// <summary>
+        ///     Проверить подключение к SOLIDWORKS
+        /// </summary>
         private void CheckConnection()
         {
             if (!_commander.IsConnectedToApp)

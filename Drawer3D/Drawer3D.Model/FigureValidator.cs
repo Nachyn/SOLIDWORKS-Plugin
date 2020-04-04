@@ -6,36 +6,61 @@ using Drawer3D.Model.Extensions;
 
 namespace Drawer3D.Model
 {
+    /// <summary>
+    ///     Валидатор фигуры
+    /// </summary>
     public class FigureValidator
     {
-        private readonly FigureSettings _figureSettings;
-
-        private static readonly ResourceManager _resourceManager
+        /// <summary>
+        ///     Ресурсы
+        /// </summary>
+        private static readonly ResourceManager ResourceManager
             = new ResourceManager(typeof(Resources.FigureValidator));
 
+        /// <summary>
+        ///     Настройки фигуры
+        /// </summary>
+        private readonly FigureSettings _figureSettings;
+
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
+        /// <param name="figureSettings">Настройки фигуры</param>
         public FigureValidator(FigureSettings figureSettings)
         {
             _figureSettings = figureSettings ?? throw new ArgumentNullException();
         }
 
+        /// <summary>
+        ///     Выбросить исключение "Нет подключения к программе SOLIDWORKS"
+        /// </summary>
         public void ThrowAppNotConnected()
         {
-            throw new FigureException("project", _resourceManager
+            throw new FigureException("project", ResourceManager
                 .GetFormattedString("AppNotConnected"));
         }
 
+        /// <summary>
+        ///     Рассчитать минимальную длину между стенками вектора vector
+        /// </summary>
+        /// <param name="vector">Вектор</param>
+        /// <returns>Минимальная длина между стенками</returns>
         public int GetMinLengthBetweenWalls(Vector vector)
         {
             return vector switch
             {
                 Vector.X => _figureSettings.MinLengthBetweenWallsX,
-
                 Vector.Y => _figureSettings.MinLengthBetweenWallsY,
-
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
         }
 
+        /// <summary>
+        ///     Рассчитать максимальную длину между стенками вектора vector
+        /// </summary>
+        /// <param name="size">Текущий размер (д/ш/в)</param>
+        /// <param name="vector">Вектор</param>
+        /// <returns>Максимальная длина между стенками</returns>
         public int GetMaxLengthBetweenWalls(int size, Vector vector)
         {
             CheckSize(size, vector);
@@ -43,6 +68,12 @@ namespace Drawer3D.Model
             return size - (minLengthBetweenWalls + _figureSettings.WallThickness * 3);
         }
 
+        /// <summary>
+        ///     Рассчитать максимальное количество стенок по вектору vector
+        /// </summary>
+        /// <param name="size">Текущий размер (д/ш/в)</param>
+        /// <param name="vector">Вектор</param>
+        /// <returns>Максимальное количество стен</returns>
         public int GetMaxCountWalls(int size, Vector vector)
         {
             CheckSize(size, vector);
@@ -56,6 +87,11 @@ namespace Drawer3D.Model
             return (int) countWalls - 1;
         }
 
+        /// <summary>
+        ///     Проверить размер (д/ш/в) по вектору vector
+        /// </summary>
+        /// <param name="size">Размер</param>
+        /// <param name="vector">Вектор</param>
         public void CheckSize(int size, Vector vector)
         {
             int minSize;
@@ -86,14 +122,21 @@ namespace Drawer3D.Model
             {
                 var nameVector = vector.GetEnumDescription();
                 throw new FigureException($"size{nameVector}"
-                    , _resourceManager.GetFormattedString("SizeVector"
+                    , ResourceManager.GetFormattedString("SizeVector"
                         , nameVector
                         , minSize
                         , maxSize));
             }
         }
 
-        public void CheckHeightWalls(int height, Vector vector, int sizeVectorZ)
+        /// <summary>
+        ///     Проверить высоту стен
+        /// </summary>
+        /// <param name="height">Высота стены</param>
+        /// <param name="vector">Вектор</param>
+        /// <param name="sizeVectorZ">Высота Z</param>
+        public void CheckHeightWalls(int height, Vector vector
+            , int sizeVectorZ)
         {
             CheckSize(sizeVectorZ, Vector.Z);
             var maxHeight = sizeVectorZ - _figureSettings.WallThickness;
@@ -103,15 +146,22 @@ namespace Drawer3D.Model
             if (height < minHeight || height > maxHeight)
             {
                 throw new FigureException($"heightWalls{vectorName}"
-                    , _resourceManager.GetFormattedString("HeightWalls"
+                    , ResourceManager.GetFormattedString("HeightWalls"
                         , vectorName
                         , minHeight
                         , maxHeight));
             }
         }
 
-        public void CheckWalls(int size, Vector vector, Walls walls,
-            int sizeVectorZ)
+        /// <summary>
+        ///     Проверить стены
+        /// </summary>
+        /// <param name="size">Размер (д/ш/в)</param>
+        /// <param name="vector">Вектор</param>
+        /// <param name="walls">Стены</param>
+        /// <param name="sizeVectorZ">Высота Z</param>
+        public void CheckWalls(int size, Vector vector, Walls walls
+            , int sizeVectorZ)
         {
             if (walls == null || walls.Points.IsNullOrEmpty())
             {
@@ -126,7 +176,7 @@ namespace Drawer3D.Model
             {
                 throw new FigureException($"countWalls{vectorName}"
                     ,
-                    _resourceManager.GetFormattedString("MaxCountWalls"
+                    ResourceManager.GetFormattedString("MaxCountWalls"
                         , vectorName
                         , maxCountWallsX));
             }
@@ -142,8 +192,16 @@ namespace Drawer3D.Model
             }
         }
 
-        private void CheckValidPoints(int size, int? lastPoint, int point,
-            Vector vector, string errorKey)
+        /// <summary>
+        ///     Проверить точки по которым строятся стены
+        /// </summary>
+        /// <param name="size">Размер (д/ш/в)</param>
+        /// <param name="lastPoint">Последняя точка</param>
+        /// <param name="point">Текущая точка</param>
+        /// <param name="vector">Вектор</param>
+        /// <param name="errorKey">Тип ошибки</param>
+        private void CheckValidPoints(int size, int? lastPoint, int point
+            , Vector vector, string errorKey)
         {
             CheckBorderPoint(size, point, vector, errorKey);
 
@@ -160,7 +218,7 @@ namespace Drawer3D.Model
             if (point - lastPoint < minLengthBetweenWalls)
             {
                 throw new FigureException(errorKey
-                    , _resourceManager.GetFormattedString("PointsInterval"
+                    , ResourceManager.GetFormattedString("PointsInterval"
                         , lastPoint
                         , point
                         , vector.GetEnumDescription()
@@ -168,6 +226,13 @@ namespace Drawer3D.Model
             }
         }
 
+        /// <summary>
+        ///     Проверить границы фигуры
+        /// </summary>
+        /// <param name="size">Размер (д/ш/в)</param>
+        /// <param name="point">Текущая точка</param>
+        /// <param name="vector">Вектор</param>
+        /// <param name="errorKey">Тип ошибки</param>
         private void CheckBorderPoint(int size, int point, Vector vector, string errorKey)
         {
             var maxPoint = GetMaxLengthBetweenWalls(size, vector) +
@@ -179,7 +244,7 @@ namespace Drawer3D.Model
             if (point < minPoint || point > maxPoint)
             {
                 throw new FigureException(errorKey
-                    , _resourceManager.GetFormattedString("PointBorder"
+                    , ResourceManager.GetFormattedString("PointBorder"
                         , point
                         , vector.GetEnumDescription()
                         , minPoint
