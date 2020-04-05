@@ -4,8 +4,18 @@ using System.Linq;
 
 namespace Drawer3D.Model.Extensions
 {
+    /// <summary>
+    ///     Методы расширения для перечислений
+    /// </summary>
     public static class EnumExtensions
     {
+        /// <summary>
+        ///     Получить атрибут TAttribute с перечисления TEnum
+        /// </summary>
+        /// <typeparam name="TEnum">Перечисление</typeparam>
+        /// <typeparam name="TAttribute">Атрибут</typeparam>
+        /// <param name="enumValue">Расширяемое перечисление</param>
+        /// <returns></returns>
         public static TAttribute GetAttributeFromEnum<TEnum, TAttribute>(TEnum enumValue)
             where TAttribute : Attribute
         {

@@ -3,10 +3,13 @@ using System.Windows.Forms;
 
 namespace Drawer3D.View
 {
+    /// <summary>
+    ///     Класс, содержащий точку входа
+    /// </summary>
     internal static class Program
     {
         /// <summary>
-        ///     The main entry point for the application.
+        ///     Главная точка входа для приложения
         /// </summary>
         [STAThread]
         private static void Main()

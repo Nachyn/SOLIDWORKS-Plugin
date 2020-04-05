@@ -1,4 +1,12 @@
 # Drawer3D
-Drawer3D - расширение для программы SOLIDWORKS, которое позволяет рисовать 3D модели в соответствии с заданными параметрами.
+Расширение для программы SOLIDWORKS 2020, которое позволяет рисовать 3D модели в соответствии с заданными параметрами.
 
-![1](https://raw.githubusercontent.com/Nachyn/ORSAPR-TUSUR/master/Images/2_0_0__2.png)
+- MVVM: Drawer3D.ViewWpf (WPF)
+- VM: Drawer3D.View (Windows Forms)
+- Unit tests: Drawer3D.Model.Tests (NUnit)
+
+##### Апрель 2020
+
+---
+
+![v3](https://raw.githubusercontent.com/Nachyn/ORSAPR-TUSUR/develop/Images/3_0_0.png)

@@ -1,0 +1,321 @@
+﻿<Window x:Class="Drawer3D.ViewWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Drawer3D.ViewWpf"
+        xmlns:vm="clr-namespace:Drawer3D.ViewWpf.ViewModels"
+        mc:Ignorable="d"
+        Title="Drawer3D"
+        MaxHeight="428"
+        Height="428"
+        MaxWidth="310"
+        MinWidth="310"
+        Width="310"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow">
+    <Window.DataContext>
+        <vm:ApplicationVm />
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="2" />
+            <Setter Property="Height"
+                    Value="20" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="Width"
+                    Value="70" />
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={RelativeSource Self}
+                        , Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground"
+                            Value="Red" />
+                    <Setter Property="BorderThickness"
+                            Value="0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Margin"
+                    Value="2" />
+            <Setter Property="Height"
+                    Value="20" />
+            <Setter Property="Width"
+                    Value="70" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Margin"
+                    Value="0 5 0 0" />
+            <Setter Property="Focusable"
+                    Value="False" />
+        </Style>
+        <Style x:Key="AddWallButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource ResourceKey=ButtonStyle}">
+            <Setter Property="Width"
+                    Value="33" />
+            <Setter Property="Content"
+                    Value="+" />
+        </Style>
+        <Style TargetType="Button"
+               x:Key="RemoveWallButtonStyle"
+               BasedOn="{StaticResource ResourceKey=ButtonStyle}">
+            <Setter Property="Width"
+                    Value="33" />
+            <Setter Property="Content"
+                    Value="-" />
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+        <Style x:Key="WallsDescriptionStyle">
+            <Setter Property="TextBlock.Margin"
+                    Value="0 5 5 5" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Menu Height="30"
+              VerticalAlignment="Top"
+              Padding="5">
+            <MenuItem Header="Проект">
+                <MenuItem Header="Новый"
+                          Command="{Binding CreateNewProject}" />
+                <MenuItem Header="Сохранить как"
+                          IsEnabled="{Binding IsProjectCreated}"
+                          Command="{Binding SaveProject}" />
+            </MenuItem>
+            <MenuItem Header="Параметры">
+                <MenuItem Header="Очистить"
+                          Command="{Binding Figure.ClearValues}" />
+                <MenuItem Header="Задать по умолчанию"
+                          Command="{Binding Figure.SetDefaultValues}" />
+            </MenuItem>
+        </Menu>
+
+        <GroupBox Header="Основание ( мм )"
+                  Grid.Row="1">
+            <Grid DataContext="{Binding Figure}">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Длина" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="X"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Ширина"
+                           Grid.Row="1"
+                           Grid.Column="0" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Y"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Высота"
+                           Grid.Row="2"
+                           Grid.Column="0" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Z"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Сетка ( мм )"
+                  Grid.Row="2">
+            <Grid x:Name="PointsLayout">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Вдоль длины"
+                           Style="{StaticResource ResourceKey=WallsDescriptionStyle}"
+                           Grid.Column="1" />
+
+                <TextBlock Text="Вдоль ширины"
+                           Style="{StaticResource ResourceKey=WallsDescriptionStyle}"
+                           Grid.Row="0"
+                           Grid.Column="2" />
+
+                <TextBlock Text="Высота"
+                           Grid.Row="1"
+                           Grid.Column="0" />
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Figure.HeightWallsX"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="2"
+                         TextChanged="TextBox_TextChanged">
+                    <TextBox.Text>
+                        <Binding Path="Figure.HeightWallsY"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="Explicit">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Text="Стены"
+                           Grid.Row="2"
+                           Grid.Column="0" />
+
+                <StackPanel Grid.Row="2"
+                            Grid.Column="1"
+                            Orientation="Horizontal">
+                    <Button Style="{StaticResource ResourceKey=AddWallButtonStyle}"
+                            Command="{Binding Figure.AddWallPointX}" />
+
+                    <Button Style="{StaticResource ResourceKey=RemoveWallButtonStyle}"
+                            Command="{Binding Figure.RemoveLastWallPointX}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2"
+                            Grid.Column="2"
+                            Orientation="Horizontal">
+
+                    <Button Style="{StaticResource ResourceKey=AddWallButtonStyle}"
+                            Command="{Binding Figure.AddWallPointY}" />
+                    <Button Style="{StaticResource ResourceKey=RemoveWallButtonStyle}"
+                            Command="{Binding Figure.RemoveLastWallPointY}" />
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding Figure.WallPointsX}"
+                         Grid.Column="1"
+                         Grid.Row="3"
+                         BorderThickness="0"
+                         MaxHeight="200">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Width="70"
+                                     Margin="0"
+                                     TextChanged="TextBoxPointX_TextChanged"
+                                     Loaded="TextBoxPointX_Loaded"
+                                     Unloaded="TextBoxPointX_Unloaded">
+                                <TextBox.Text>
+                                    <Binding Path="Value"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="Explicit">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox ItemsSource="{Binding Figure.WallPointsY}"
+                         Grid.Column="2"
+                         Grid.Row="3"
+                         BorderThickness="0"
+                         MaxHeight="200">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Width="70"
+                                     Margin="0"
+                                     TextChanged="TextBoxPointY_TextChanged"
+                                     Loaded="TextBoxPointY_Loaded"
+                                     Unloaded="TextBoxPointY_Unloaded">
+                                <TextBox.Text>
+                                    <Binding Path="Value"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="Explicit">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Grid.Column="2"
+                        Grid.Row="4"
+                        Content="Построить"
+                        Command="{Binding BuildFigure}"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource ButtonStyle}" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

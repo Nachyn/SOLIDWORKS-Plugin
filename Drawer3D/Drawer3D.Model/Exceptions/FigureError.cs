@@ -1,6 +1,9 @@
 ﻿namespace Drawer3D.Model.Exceptions
 {
-    public class FormError
+    /// <summary>
+    /// Описание ошибки
+    /// </summary>
+    public class FigureError
     {
         public string Key { get; set; }
 

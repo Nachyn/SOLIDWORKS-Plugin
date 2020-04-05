@@ -84,10 +84,10 @@
             this._groupBoxBase.Controls.Add(this._labelBaseX);
             this._groupBoxBase.Location = new System.Drawing.Point(12, 27);
             this._groupBoxBase.Name = "_groupBoxBase";
-            this._groupBoxBase.Size = new System.Drawing.Size(150, 106);
+            this._groupBoxBase.Size = new System.Drawing.Size(247, 106);
             this._groupBoxBase.TabIndex = 3;
             this._groupBoxBase.TabStop = false;
-            this._groupBoxBase.Text = "Основание";
+            this._groupBoxBase.Text = "Основание ( мм )";
             // 
             // _textBoxBaseZ
             // 
@@ -157,7 +157,7 @@
             this._groupBoxWalls.Size = new System.Drawing.Size(247, 100);
             this._groupBoxWalls.TabIndex = 4;
             this._groupBoxWalls.TabStop = false;
-            this._groupBoxWalls.Text = "Сетка";
+            this._groupBoxWalls.Text = "Сетка ( мм )";
             // 
             // _labelWalls
             // 
