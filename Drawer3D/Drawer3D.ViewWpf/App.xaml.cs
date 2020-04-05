@@ -1,25 +1,43 @@
-﻿using System.Windows;
+﻿using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Threading;
 using Drawer3D.Model.Exceptions;
 
 namespace Drawer3D.ViewWpf
 {
     /// <summary>
-    ///     Interaction logic for App.xaml
+    ///     Логика взаимодействия с приложением
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        ///     Обработчик необработанных исключений
+        /// </summary>
+        /// <param name="sender">Отправитель</param>
+        /// <param name="e">Событие</param>
         private void Application_DispatcherUnhandledException(object sender
             , DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception is FigureException figureException)
+            string errorInfo = null;
+
+            switch (e.Exception)
             {
-                MessageBox.Show(figureException.FigureError.Message
+                case FigureException figureException:
+                    errorInfo = figureException.FigureError.Message;
+                    e.Handled = true;
+                    break;
+                case COMException _:
+                    errorInfo = "Программа SOLIDWORKS 2020 не найдена в ОС.";
+                    e.Handled = true;
+                    break;
+            }
+
+            if (errorInfo != null)
+            {
+                MessageBox.Show(errorInfo
                     , string.Empty
                     , MessageBoxButton.OK
                     , MessageBoxImage.Exclamation);
-
-                e.Handled = true;
             }
         }
     }
