@@ -29,11 +29,14 @@
                     Value="20" />
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
+            <Setter Property="Width"
+                    Value="70" />
             <Style.Triggers>
                 <Trigger Property="Validation.HasError"
                          Value="True">
                     <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                            Value="{Binding RelativeSource={RelativeSource Self}
+                        , Path=(Validation.Errors)[0].ErrorContent}" />
                     <Setter Property="Foreground"
                             Value="Red" />
                     <Setter Property="BorderThickness"
@@ -41,11 +44,13 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="Button">
+        <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="Margin"
                     Value="2" />
             <Setter Property="Height"
                     Value="20" />
+            <Setter Property="Width"
+                    Value="70" />
         </Style>
         <Style TargetType="ListBoxItem">
             <Setter Property="Padding"
@@ -54,6 +59,30 @@
                     Value="0 5 0 0" />
             <Setter Property="Focusable"
                     Value="False" />
+        </Style>
+        <Style x:Key="AddWallButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource ResourceKey=ButtonStyle}">
+            <Setter Property="Width"
+                    Value="33" />
+            <Setter Property="Content"
+                    Value="+" />
+        </Style>
+        <Style TargetType="Button"
+               x:Key="RemoveWallButtonStyle"
+               BasedOn="{StaticResource ResourceKey=ButtonStyle}">
+            <Setter Property="Width"
+                    Value="33" />
+            <Setter Property="Content"
+                    Value="-" />
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+        <Style x:Key="WallsDescriptionStyle">
+            <Setter Property="TextBlock.Margin"
+                    Value="0 5 5 5" />
         </Style>
     </Window.Resources>
 
@@ -83,7 +112,6 @@
         </Menu>
 
         <GroupBox Header="Основание ( мм )"
-                  Margin="5"
                   Grid.Row="1">
             <Grid DataContext="{Binding Figure}">
                 <Grid.RowDefinitions>
@@ -98,8 +126,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Длина" />
-                <TextBox Width="70"
-                         Grid.Row="0"
+                <TextBox Grid.Row="0"
                          Grid.Column="1"
                          TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
@@ -116,9 +143,7 @@
                 <TextBlock Text="Ширина"
                            Grid.Row="1"
                            Grid.Column="0" />
-
-                <TextBox Width="70"
-                         Grid.Row="1"
+                <TextBox Grid.Row="1"
                          Grid.Column="1"
                          TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
@@ -135,9 +160,7 @@
                 <TextBlock Text="Высота"
                            Grid.Row="2"
                            Grid.Column="0" />
-
-                <TextBox Width="70"
-                         Grid.Row="2"
+                <TextBox Grid.Row="2"
                          Grid.Column="1"
                          TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
@@ -154,8 +177,7 @@
         </GroupBox>
 
         <GroupBox Header="Сетка ( мм )"
-                  Grid.Row="2"
-                  Margin="5">
+                  Grid.Row="2">
             <Grid x:Name="PointsLayout">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -171,20 +193,19 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Вдоль длины"
-                           Grid.Column="1"
-                           Margin="0 5 5 5" />
+                           Style="{StaticResource ResourceKey=WallsDescriptionStyle}"
+                           Grid.Column="1" />
 
                 <TextBlock Text="Вдоль ширины"
+                           Style="{StaticResource ResourceKey=WallsDescriptionStyle}"
                            Grid.Row="0"
-                           Grid.Column="2"
-                           Margin="0 5 5 5" />
+                           Grid.Column="2" />
 
                 <TextBlock Text="Высота"
                            Grid.Row="1"
                            Grid.Column="0" />
 
-                <TextBox Width="70"
-                         Grid.Row="1"
+                <TextBox Grid.Row="1"
                          Grid.Column="1"
                          TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
@@ -198,8 +219,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <TextBox Width="70"
-                         Grid.Row="1"
+                <TextBox Grid.Row="1"
                          Grid.Column="2"
                          TextChanged="TextBox_TextChanged">
                     <TextBox.Text>
@@ -220,12 +240,10 @@
                 <StackPanel Grid.Row="2"
                             Grid.Column="1"
                             Orientation="Horizontal">
-                    <Button Content="+"
-                            Width="33"
+                    <Button Style="{StaticResource ResourceKey=AddWallButtonStyle}"
                             Command="{Binding Figure.AddWallPointX}" />
 
-                    <Button Content="-"
-                            Width="33"
+                    <Button Style="{StaticResource ResourceKey=RemoveWallButtonStyle}"
                             Command="{Binding Figure.RemoveLastWallPointX}" />
                 </StackPanel>
 
@@ -233,11 +251,9 @@
                             Grid.Column="2"
                             Orientation="Horizontal">
 
-                    <Button Content="+"
-                            Width="33"
+                    <Button Style="{StaticResource ResourceKey=AddWallButtonStyle}"
                             Command="{Binding Figure.AddWallPointY}" />
-                    <Button Content="-"
-                            Width="33"
+                    <Button Style="{StaticResource ResourceKey=RemoveWallButtonStyle}"
                             Command="{Binding Figure.RemoveLastWallPointY}" />
                 </StackPanel>
 
@@ -297,9 +313,8 @@
                         Grid.Row="4"
                         Content="Построить"
                         Command="{Binding BuildFigure}"
-                        Width="70"
                         HorizontalAlignment="Left"
-                        Margin="2" />
+                        Style="{StaticResource ButtonStyle}" />
             </Grid>
         </GroupBox>
     </Grid>
