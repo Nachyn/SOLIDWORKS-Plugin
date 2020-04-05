@@ -6,14 +6,23 @@ using System.Windows.Data;
 namespace Drawer3D.ViewWpf
 {
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    ///     Логика взаимодействия с MainWindow
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        ///     Связующее выражения для точек-стен вдоль вектора X
+        /// </summary>
         private readonly List<BindingExpression> _bindingPointsX;
 
+        /// <summary>
+        ///     Связующее выражения для точек-стен вдоль вектора Y
+        /// </summary>
         private readonly List<BindingExpression> _bindingPointsY;
 
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -58,6 +67,11 @@ namespace Drawer3D.ViewWpf
             _bindingPointsY.ForEach(b => b.UpdateSource());
         }
 
+        /// <summary>
+        ///     Получить связующее выражение
+        /// </summary>
+        /// <param name="sender">Отправитель</param>
+        /// <returns>Связующее выражение</returns>
         private static BindingExpression GetTextBinding(object sender)
         {
             return ((TextBox) sender).GetBindingExpression(TextBox.TextProperty);

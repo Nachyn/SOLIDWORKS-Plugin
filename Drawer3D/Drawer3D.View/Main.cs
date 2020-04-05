@@ -11,25 +11,54 @@ using Newtonsoft.Json;
 
 namespace Drawer3D.View
 {
+    /// <summary>
+    ///     Главная форма
+    /// </summary>
     public partial class Main : Form
     {
-        private readonly string _solidWorksSettingsPath = "SolidWorksSettings.json";
-
-
-        private Drawer _drawer;
-
-        private List<TextBox> _wallsX;
-
-        private Point _locationLastWallX;
-
-        private List<TextBox> _wallsY;
-
-        private Point _locationLastWallY;
-
+        /// <summary>
+        ///     Отступ между текстбоксами для стен
+        /// </summary>
         private readonly int _marginWall = 26;
 
+        /// <summary>
+        ///     Относительный путь к JSON настройкам программы SOLIDWORKS
+        /// </summary>
+        private readonly string _solidWorksSettingsPath = "SolidWorksSettings.json";
+
+        /// <summary>
+        ///     Построитель-рисовальщик фигуры
+        /// </summary>
+        private Drawer _drawer;
+
+        /// <summary>
+        ///     Расположение последнего текстбокса для стен вдоль вектора X
+        /// </summary>
+        private Point _locationLastWallX;
+
+        /// <summary>
+        ///     Расположение последнего текстбокса для стен вдоль вектора Y
+        /// </summary>
+        private Point _locationLastWallY;
+
+        /// <summary>
+        ///     Размер текстбокса для стен
+        /// </summary>
         private Size _sizeWall;
 
+        /// <summary>
+        ///     Текстбоксы для стен вдоль вектора X
+        /// </summary>
+        private List<TextBox> _wallsX;
+
+        /// <summary>
+        ///     Текстбоксы для стен вдоль вектора Y
+        /// </summary>
+        private List<TextBox> _wallsY;
+
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
         public Main()
         {
             InitializeComponent();
@@ -37,6 +66,9 @@ namespace Drawer3D.View
             InitializeWalls();
         }
 
+        /// <summary>
+        ///     Инициализировать текстбоксы для стены вдоль векторов
+        /// </summary>
         private void InitializeWalls()
         {
             _sizeWall = _textBoxHeightWallsX.Size;
@@ -48,12 +80,19 @@ namespace Drawer3D.View
             _locationLastWallY.Y += _marginWall;
         }
 
+        /// <summary>
+        ///     Инициализировать построитель-рисовальщик фигуры
+        /// </summary>
         private void InitializeDrawer()
         {
             _drawer = new Drawer(new FigureSettings(),
                 new SolidWorksCommander(GetSolidWorksSettings()));
         }
 
+        /// <summary>
+        ///     Получить настройки для программы SOLIDWORKS
+        /// </summary>
+        /// <returns>Настройки для программы SOLIDWORKS</returns>
         private SolidWorksSettings GetSolidWorksSettings()
         {
             var settingsText = File.ReadAllText(_solidWorksSettingsPath);
@@ -94,6 +133,11 @@ namespace Drawer3D.View
             }
         }
 
+        /// <summary>
+        ///     Проверить текстбоксы на целочисленный тип
+        /// </summary>
+        /// <param name="textBoxes"></param>
+        /// <returns>Все ли текстбоксы с целочисленным типом</returns>
         private bool CheckTextBoxesOnInteger(List<TextBox> textBoxes)
         {
             var isValid = true;
@@ -128,6 +172,10 @@ namespace Drawer3D.View
             }
         }
 
+        /// <summary>
+        ///     Получить из формы пользовательские параметры для фигуры
+        /// </summary>
+        /// <returns>Пользовательские параметры для фигуры</returns>
         private Figure GetFigure()
         {
             Walls wallsX = null;
@@ -198,6 +246,10 @@ namespace Drawer3D.View
             TextBoxes_TextChanged(null, null);
         }
 
+        /// <summary>
+        ///     Добавить текстбокс для стен
+        /// </summary>
+        /// <param name="vector">Вектор</param>
         private void AddWall(Vector vector)
         {
             Point location;
@@ -230,6 +282,10 @@ namespace Drawer3D.View
             MoveControls();
         }
 
+        /// <summary>
+        ///     Удалить текстбокс для стен
+        /// </summary>
+        /// <param name="vector">Вектор</param>
         private void RemoveWall(Vector vector)
         {
             var walls = vector switch
@@ -264,6 +320,9 @@ namespace Drawer3D.View
             MoveControls();
         }
 
+        /// <summary>
+        ///     Обновить расположение элементов управления формы
+        /// </summary>
         private void MoveControls()
         {
             var walls = new List<TextBox>();
@@ -286,6 +345,10 @@ namespace Drawer3D.View
                 fullGroupBoxHeight + 5);
         }
 
+        /// <summary>
+        ///     Обработать исключения типа FigureException
+        /// </summary>
+        /// <param name="exception">Исключение</param>
         private void HandleFigureException(FigureException exception)
         {
             _errorProvider.Clear();

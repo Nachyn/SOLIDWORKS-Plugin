@@ -8,20 +8,43 @@ using Drawer3D.ViewWpf.Helpers;
 
 namespace Drawer3D.ViewWpf.ViewModels
 {
+    /// <summary>
+    ///     View-Model точки-стены вдоль вектора
+    /// </summary>
     public class PointVm : INotifyPropertyChanged, IDataErrorInfo
     {
-        private readonly int _index;
-
-        private int _value;
-
+        /// <summary>
+        ///     Пользовательские параметры фигуры
+        /// </summary>
         private readonly Figure _figure;
 
+        /// <summary>
+        ///     Валидатор настроек фигуры
+        /// </summary>
         private readonly FigureValidator _figureValidator;
 
+        /// <summary>
+        ///     Индекс в коллекции
+        /// </summary>
+        private readonly int _index;
+
+        /// <summary>
+        ///     Текущий вектор
+        /// </summary>
         private readonly Vector _vector;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        ///     Значение
+        /// </summary>
+        private int _value;
 
+        /// <summary>
+        ///     Конструктор
+        /// </summary>
+        /// <param name="index">Индекс</param>
+        /// <param name="figure">Пользовательские параметры фигуры</param>
+        /// <param name="figureValidator">Валидатор настроек фигуры</param>
+        /// <param name="vector">Текущий вектор</param>
         public PointVm(int index
             , Figure figure
             , FigureValidator figureValidator
@@ -33,6 +56,9 @@ namespace Drawer3D.ViewWpf.ViewModels
             _vector = vector;
         }
 
+        /// <summary>
+        ///     Получает и задает значение
+        /// </summary>
         public int Value
         {
             get => _value;
@@ -58,6 +84,11 @@ namespace Drawer3D.ViewWpf.ViewModels
             }
         }
 
+        /// <summary>
+        ///     Валидировать текущее свойство
+        /// </summary>
+        /// <param name="columnName">Текущее свойство</param>
+        /// <returns>Строка с ошибой, пустая строка - ошибок нет</returns>
         public string this[string columnName] =>
             ErrorInfoHelper.HandleErrorInfo(() =>
             {
@@ -83,8 +114,20 @@ namespace Drawer3D.ViewWpf.ViewModels
                 _figureValidator.CheckWalls(size, _vector, walls, _figure.Z);
             });
 
-        public string Error { get; }
+        /// <summary>
+        ///     Текущая ошибка валидации
+        /// </summary>
+        public string Error => throw new NotImplementedException();
 
+        /// <summary>
+        ///     Событие извещает систему об изменении свойства
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Извещает систему об изменении свойства
+        /// </summary>
+        /// <param name="propertyName">Имя свойства</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(
             [CallerMemberName] string propertyName = null)
