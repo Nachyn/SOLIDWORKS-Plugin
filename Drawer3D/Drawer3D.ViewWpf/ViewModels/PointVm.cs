@@ -1,17 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Drawer3D.Model;
 using Drawer3D.Model.Enums;
-using Drawer3D.ViewWpf.Annotations;
 using Drawer3D.ViewWpf.Helpers;
+using GalaSoft.MvvmLight;
 
 namespace Drawer3D.ViewWpf.ViewModels
 {
     /// <summary>
     ///     View-Model точки-стены вдоль вектора
     /// </summary>
-    public class PointVm : INotifyPropertyChanged, IDataErrorInfo
+    public class PointVm : ObservableObject, IDataErrorInfo
     {
         /// <summary>
         ///     Пользовательские параметры фигуры
@@ -79,8 +78,7 @@ namespace Drawer3D.ViewWpf.ViewModels
                         throw new ArgumentOutOfRangeException();
                 }
 
-                _value = value;
-                OnPropertyChanged(nameof(Value));
+                Set(() => Value, ref _value, value);
             }
         }
 
@@ -118,21 +116,5 @@ namespace Drawer3D.ViewWpf.ViewModels
         ///     Текущая ошибка валидации
         /// </summary>
         public string Error => throw new NotImplementedException();
-
-        /// <summary>
-        ///     Событие извещает систему об изменении свойства
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Извещает систему об изменении свойства
-        /// </summary>
-        /// <param name="propertyName">Имя свойства</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(
-            [CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Drawer3D.ViewWpf"
-        xmlns:vm="clr-namespace:Drawer3D.ViewWpf.ViewModels"
         mc:Ignorable="d"
         Title="Drawer3D"
         MaxHeight="428"
@@ -13,10 +12,8 @@
         MinWidth="310"
         Width="310"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow">
-    <Window.DataContext>
-        <vm:ApplicationVm />
-    </Window.DataContext>
+        WindowStyle="ToolWindow"
+        DataContext="{Binding Application,Source={StaticResource Locator}}">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Margin"
