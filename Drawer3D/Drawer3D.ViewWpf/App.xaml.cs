@@ -20,12 +20,13 @@ namespace Drawer3D.ViewWpf
         {
             string errorInfo = null;
 
-            switch (e.Exception)
+            switch (e.Exception.InnerException)
             {
                 case FigureException figureException:
                     errorInfo = figureException.FigureError.Message;
                     e.Handled = true;
                     break;
+
                 case COMException _:
                     errorInfo = "Программа SOLIDWORKS 2020 не найдена в ОС.";
                     e.Handled = true;
