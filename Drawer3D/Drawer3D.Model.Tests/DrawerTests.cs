@@ -8,107 +8,169 @@ using NUnit.Framework;
 
 namespace Drawer3D.Model.Tests
 {
+    /// <summary>
+    ///     Модульные тесты для класса Drawer
+    /// </summary>
     public class DrawerTests
     {
+        /// <summary>
+        ///     API Команды к программе SOLIDWORKS
+        /// </summary>
         private ISolidWorksCommander _commander;
 
+        /// <summary>
+        ///     Построитель-рисовальщик фигуры
+        /// </summary>
         private Drawer _drawer;
 
+        /// <summary>
+        ///     Инициализировать каждый тест
+        /// </summary>
         [SetUp]
-        public void InitializeTest()
+        public void InitializeEachTest()
         {
             _commander = Substitute.For<ISolidWorksCommander>();
             _commander.IsConnectedToApp.Returns(true);
             _drawer = new Drawer(new FigureSettings(), _commander);
         }
 
+        /// <summary>
+        ///     Негативный тест конструктора
+        /// </summary>
         [Test]
-        public void ConstructorTest_Negative()
+        public void ConstructorTest_GivenInvalidArguments_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() => new Drawer(null, null));
         }
 
+        /// <summary>
+        ///     Проверка свойства FigureSettings
+        /// </summary>
         [Test]
-        public void FigureSettingsTest()
+        public void FigureSettingsTest_ShouldReturnCorrectInstance()
         {
             Assert.IsInstanceOf<FigureSettings>(_drawer.FigureSettings);
         }
 
+        /// <summary>
+        ///     Проверка метода CheckFigure
+        /// </summary>
+        /// <param name="figure">Валидные параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
-        public void CheckFigureTest(Figure figure)
+        public void CheckFigureTest_ShouldBeComplete(Figure figure)
         {
             _drawer.CheckFigure(figure);
         }
 
+        /// <summary>
+        ///     Негативная проверка метода CheckFigure (null аргумент)
+        /// </summary>
         [Test]
-        public void CheckFigureTest_NullArgumentNegative()
+        public void CheckFigureTest_GivenNullArgument_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() =>
                 _drawer.CheckFigure(null));
         }
 
+        /// <summary>
+        ///     Негативная проверка метода CheckFigure (недопустимый аргумент)
+        /// </summary>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
-        public void CheckFigureTest_Negative(Figure figure)
+        public void CheckFigureTest_GivenInvalidArgument_ThrowsException(Figure figure)
         {
             Assert.Throws<FigureException>(() => _drawer.CheckFigure(figure));
         }
 
+        /// <summary>
+        ///     Проверка метода BuildFigure
+        /// </summary>
+        /// <param name="figure">Валидные параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
-        public void BuildFigureTest(Figure figure)
+        public void BuildFigureTest_ShouldBeComplete(Figure figure)
         {
             _drawer.BuildFigure(figure);
         }
 
+        /// <summary>
+        ///     Проверка метода BuildFigure (должен перестроить)
+        /// </summary>
+        /// <param name="figure">Валидные параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
-        public void RebuildFigureTest(Figure figure)
+        public void BuildFigureTest_ShouldBeRebuild(Figure figure)
         {
             _commander.BuildedPartFiguresCount.Returns(1);
             _drawer.BuildFigure(figure);
         }
 
+        /// <summary>
+        ///     Проверка метода BuildFigure (должен перестроить)
+        /// </summary>
         [Test]
-        public void BuildFigureTest_NullArgumentNegative()
+        public void BuildFigureTest_GivenNullArgument_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() =>
                 _drawer.BuildFigure(null));
         }
 
+        /// <summary>
+        ///     Негативная проверка метода BuildFigure
+        /// </summary>
+        /// <param name="figure">Валидные параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
-        public void CheckConnectionTest_Negative(Figure figure)
+        public void BuildFigureTest_GivenDisconnect_ThrowsException(Figure figure)
         {
             _commander.IsConnectedToApp.Returns(false);
             Assert.Throws<FigureException>(() =>
                 _drawer.BuildFigure(figure));
         }
 
+        /// <summary>
+        ///     Негативная проверка метода BuildFigure (недопустимый аргумент)
+        /// </summary>
+        /// <param name="figure">Недопустимые параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
-        public void BuildFigureTest_Negative(Figure figure)
+        public void BuildFigureTest_GivenInvalidArguments_ThrowsException(Figure figure)
         {
             Assert.Throws<FigureException>(() => _drawer.BuildFigure(figure));
         }
 
+        /// <summary>
+        ///     Проверка метода ConnectToApp
+        /// </summary>
         [Test]
-        public void ConnectToApp()
+        public void ConnectToAppTest_ShouldBeComplete()
         {
             _drawer.ConnectToApp();
         }
 
+        /// <summary>
+        ///     Проверка метода SaveToFile
+        /// </summary>
         [Test]
-        public void SaveToFile()
+        public void SaveToFileTest_ShouldBeComplete()
         {
             _drawer.SaveToFile(string.Empty);
         }
 
+        /// <summary>
+        ///     Негативная проверка метода SaveToFile
+        /// </summary>
         [Test]
-        public void SaveToFile_Negative()
+        public void SaveToFileTest_GivenDisconnect_ThrowsException()
         {
             _commander.IsConnectedToApp.Returns(false);
             Assert.Throws<FigureException>(() => _drawer.SaveToFile(string.Empty));
         }
     }
 
+    /// <summary>
+    ///     Тестовые данные для класса DrawerTests
+    /// </summary>
     public static class DrawerTestsData
     {
+        /// <summary>
+        ///     Валидные параметры фигуры
+        /// </summary>
         public static IEnumerable Figures
         {
             get
@@ -123,8 +185,8 @@ namespace Drawer3D.Model.Tests
                         {
                             25, 75, 100, 125, 150
                         }
-                    }
-                    , WallsY = new Walls
+                    },
+                    WallsY = new Walls
                     {
                         Height = 95, Points = new List<int>
                         {
@@ -135,6 +197,9 @@ namespace Drawer3D.Model.Tests
             }
         }
 
+        /// <summary>
+        ///     Некорректные параметры фигуры
+        /// </summary>
         public static IEnumerable FiguresNegative
         {
             get
@@ -149,8 +214,8 @@ namespace Drawer3D.Model.Tests
                         {
                             25, 25, 100, 125, 150
                         }
-                    }
-                    , WallsY = new Walls
+                    },
+                    WallsY = new Walls
                     {
                         Height = 95, Points = new List<int>
                         {

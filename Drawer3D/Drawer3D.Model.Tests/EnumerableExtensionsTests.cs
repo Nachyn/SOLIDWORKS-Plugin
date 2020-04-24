@@ -4,10 +4,16 @@ using NUnit.Framework;
 
 namespace Drawer3D.Model.Tests
 {
+    /// <summary>
+    ///     Модульные тесты для Enumerable расширений
+    /// </summary>
     public class EnumerableExtensionsTests
     {
+        /// <summary>
+        ///     Проверка расширения IsNullOrEmpty
+        /// </summary>
         [Test]
-        public void IsNullOrEmptyTest()
+        public void IsNullOrEmptyTest_ShouldReturnValidResponse()
         {
             Assert.That(!new List<int> {1, 2, 3}.IsNullOrEmpty());
             Assert.That(new List<int>().IsNullOrEmpty());
