@@ -6,16 +6,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Drawer3D.Model;
 using Drawer3D.Model.Enums;
-using Drawer3D.ViewWpf.Annotations;
-using Drawer3D.ViewWpf.Commands;
 using Drawer3D.ViewWpf.Helpers;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Drawer3D.ViewWpf.ViewModels
 {
     /// <summary>
     ///     View-Model пользовательских параметров фигуры
     /// </summary>
-    public class FigureVm : INotifyPropertyChanged, IDataErrorInfo
+    public class FigureVm : ViewModelBase, IDataErrorInfo
     {
         /// <summary>
         ///     Пользовательские параметры фигуры
@@ -70,7 +70,7 @@ namespace Drawer3D.ViewWpf.ViewModels
             set
             {
                 _figure.X = value;
-                OnPropertyChanged(nameof(X));
+                RaisePropertyChanged(() => X);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Drawer3D.ViewWpf.ViewModels
             set
             {
                 _figure.Y = value;
-                OnPropertyChanged(nameof(Y));
+                RaisePropertyChanged(() => Y);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Drawer3D.ViewWpf.ViewModels
             set
             {
                 _figure.Z = value;
-                OnPropertyChanged(nameof(Z));
+                RaisePropertyChanged(() => Z);
             }
         }
 
@@ -109,7 +109,7 @@ namespace Drawer3D.ViewWpf.ViewModels
             set
             {
                 _figure.WallsX.Height = value;
-                OnPropertyChanged(nameof(HeightWallsX));
+                RaisePropertyChanged(() => HeightWallsX);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Drawer3D.ViewWpf.ViewModels
             set
             {
                 _figure.WallsY.Height = value;
-                OnPropertyChanged(nameof(HeightWallsY));
+                RaisePropertyChanged(() => HeightWallsY);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// <summary>
         ///     Команда для добавления стенки вдоль вектора X
         /// </summary>
-        public RelayCommand AddWallPointX => new RelayCommand(obj =>
+        public RelayCommand<int> AddWallPointX => new RelayCommand<int>(newPoint =>
         {
             var pointVm = new PointVm(WallPointsX.Count
                 , _figure
@@ -147,17 +147,13 @@ namespace Drawer3D.ViewWpf.ViewModels
                 Vector.X);
 
             WallPointsX.Add(pointVm);
-
-            if (obj is int value)
-            {
-                pointVm.Value = value;
-            }
+            pointVm.Value = newPoint;
         });
 
         /// <summary>
         ///     Команда для добавления стенки вдоль вектора Y
         /// </summary>
-        public RelayCommand AddWallPointY => new RelayCommand(obj =>
+        public RelayCommand<int> AddWallPointY => new RelayCommand<int>(newPoint =>
         {
             var pointVm = new PointVm(WallPointsY.Count
                 , _figure
@@ -165,17 +161,13 @@ namespace Drawer3D.ViewWpf.ViewModels
                 Vector.Y);
 
             WallPointsY.Add(pointVm);
-
-            if (obj is int value)
-            {
-                pointVm.Value = value;
-            }
+            pointVm.Value = newPoint;
         });
 
         /// <summary>
         ///     Команда для удаления последней стенки вдоль вектора X
         /// </summary>
-        public RelayCommand RemoveLastWallPointX => new RelayCommand(obj =>
+        public RelayCommand RemoveLastWallPointX => new RelayCommand(() =>
         {
             var lastPoint = WallPointsX.LastOrDefault();
             if (lastPoint != null)
@@ -187,7 +179,7 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// <summary>
         ///     Команда для удаления последней стенки вдоль вектора Y
         /// </summary>
-        public RelayCommand RemoveLastWallPointY => new RelayCommand(obj =>
+        public RelayCommand RemoveLastWallPointY => new RelayCommand(() =>
         {
             var lastPoint = WallPointsY.LastOrDefault();
             if (lastPoint != null)
@@ -199,12 +191,13 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// <summary>
         ///     Задать параметры фигуры по умолчанию
         /// </summary>
-        public RelayCommand SetDefaultValues => new RelayCommand(obj =>
+        public RelayCommand SetDefaultValues => new RelayCommand(() =>
         {
             X = _figureSettings.SizeX.Min;
             Y = _figureSettings.SizeY.Min;
             Z = _figureSettings.SizeZ.Min;
-            HeightWallsX = HeightWallsY = Z - _figureSettings.WallThickness;
+            CalculateWallsHeight();
+
             for (var i = 25; i <= 100; i += 25)
             {
                 AddWallPointX.Execute(i);
@@ -215,7 +208,7 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// <summary>
         ///     Очистить все свойства (задать 0).
         /// </summary>
-        public RelayCommand ClearValues => new RelayCommand(obj =>
+        public RelayCommand ClearValues => new RelayCommand(() =>
         {
             X = Y = Z = HeightWallsX = HeightWallsY = 0;
         });
@@ -245,13 +238,11 @@ namespace Drawer3D.ViewWpf.ViewModels
                     case nameof(HeightWallsX):
                         _figureValidator.CheckHeightWalls(HeightWallsX, Vector.X,
                             _figure.Z);
-
                         break;
 
                     case nameof(HeightWallsY):
                         _figureValidator.CheckHeightWalls(HeightWallsY, Vector.Y,
                             _figure.Z);
-
                         break;
                 }
             });
@@ -261,19 +252,10 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// </summary>
         public string Error => throw new NotImplementedException();
 
-        /// <summary>
-        ///     Событие извещает систему об изменении свойства
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Извещает систему об изменении свойства
-        /// </summary>
-        /// <param name="propertyName">Имя свойства</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(
-            [CallerMemberName] string propertyName = null)
+        public override void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
+            base.RaisePropertyChanged(propertyName);
+
             if (propertyName == nameof(Z))
             {
                 CalculateWallsHeight();
@@ -294,8 +276,6 @@ namespace Drawer3D.ViewWpf.ViewModels
                     WallPointsY.Clear();
                     break;
             }
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>

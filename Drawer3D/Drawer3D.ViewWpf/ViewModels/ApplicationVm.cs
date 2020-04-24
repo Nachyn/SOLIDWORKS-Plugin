@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using Drawer3D.Model;
-using Drawer3D.ViewWpf.Annotations;
-using Drawer3D.ViewWpf.Commands;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 
 namespace Drawer3D.ViewWpf.ViewModels
@@ -12,7 +10,7 @@ namespace Drawer3D.ViewWpf.ViewModels
     /// <summary>
     ///     Главная View-Model приложения
     /// </summary>
-    public class ApplicationVm : INotifyPropertyChanged
+    public class ApplicationVm : ViewModelBase
     {
         /// <summary>
         ///     Построитель-рисовальщик
@@ -52,17 +50,13 @@ namespace Drawer3D.ViewWpf.ViewModels
         public bool IsProjectCreated
         {
             get => _isProjectCreated;
-            private set
-            {
-                _isProjectCreated = value;
-                OnPropertyChanged(nameof(IsProjectCreated));
-            }
+            private set => Set(() => IsProjectCreated, ref _isProjectCreated, value);
         }
 
         /// <summary>
         ///     Команда для создания нового проекта
         /// </summary>
-        public RelayCommand CreateNewProject => new RelayCommand(obj =>
+        public RelayCommand CreateNewProject => new RelayCommand(() =>
         {
             _drawer.ConnectToApp();
             IsProjectCreated = true;
@@ -71,12 +65,12 @@ namespace Drawer3D.ViewWpf.ViewModels
         /// <summary>
         ///     Команда для построения фигуры
         /// </summary>
-        public RelayCommand BuildFigure => new RelayCommand(obj => { _drawer.BuildFigure(_figure); });
+        public RelayCommand BuildFigure => new RelayCommand(() => _drawer.BuildFigure(_figure));
 
         /// <summary>
         ///     Команда для сохранения проекта
         /// </summary>
-        public RelayCommand SaveProject => new RelayCommand(obj =>
+        public RelayCommand SaveProject => new RelayCommand(() =>
         {
             if (!IsProjectCreated)
             {
@@ -91,11 +85,6 @@ namespace Drawer3D.ViewWpf.ViewModels
         });
 
         /// <summary>
-        ///     Событие извещает систему об изменении свойства
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         ///     Получить настройки для программы SOLIDWORKS
         /// </summary>
         /// <returns>Настройки для программы SOLIDWORKS</returns>
@@ -104,17 +93,6 @@ namespace Drawer3D.ViewWpf.ViewModels
             var name = Application.Current.Resources["SolidWorksName"].ToString();
             var guid = Application.Current.Resources["SolidWorksGuid"].ToString();
             return new SolidWorksSettings {Guid = new Guid(guid), Name = name};
-        }
-
-        /// <summary>
-        ///     Извещает систему об изменении свойства
-        /// </summary>
-        /// <param name="propertyName">Имя свойства</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(
-            [CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

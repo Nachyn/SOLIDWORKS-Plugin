@@ -71,12 +71,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Helpers\ErrorInfoHelper.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\ApplicationVm.cs" />
     <Compile Include="ViewModels\FigureVm.cs" />
     <Compile Include="ViewModels\PointVm.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
