@@ -104,9 +104,9 @@ namespace Drawer3D.Model
         public void ConnectToApp()
         {
             Type solidWorksType = null;
-            foreach (var type in _appSettings.ApiNumbers)
+            foreach (var number in _appSettings.ApiNumbers)
             {
-                solidWorksType = Type.GetTypeFromProgID($"SldWorks.Application.{type}");
+                solidWorksType = Type.GetTypeFromProgID($"SldWorks.Application.{number}");
                 if (solidWorksType != null)
                 {
                     break;

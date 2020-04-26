@@ -206,8 +206,8 @@ namespace Drawer3D.Model
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
 
-            _commander.SelectByPoint(_figureSettings.WallThickness + 1
-                , _figureSettings.WallThickness + 1
+            _commander.SelectByPoint(_figureSettings.WallThickness * 2
+                , _figureSettings.WallThickness + 2
                 , _figureSettings.WallThickness);
 
             _commander.ToggleSketchMode();
