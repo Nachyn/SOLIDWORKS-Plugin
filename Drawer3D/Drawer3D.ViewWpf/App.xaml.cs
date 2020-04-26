@@ -28,7 +28,13 @@ namespace Drawer3D.ViewWpf
                     break;
 
                 case COMException _:
-                    errorInfo = "Программа SOLIDWORKS 2020 не найдена в ОС.";
+                    errorInfo = "Проект, программа были закрыты. Создайте новый проект.";
+                    e.Handled = true;
+                    break;
+
+                case ExternalException exception:
+                    errorInfo = "В ОС не найдена программа SOLIDWORKS, " +
+                                $"которая использует API {exception.Message}.";
                     e.Handled = true;
                     break;
             }
