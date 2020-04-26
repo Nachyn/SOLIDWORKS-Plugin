@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Drawer3D.Model.Extensions;
 using Drawer3D.Model.Interfaces;
 using SolidWorks.Interop.sldworks;
@@ -40,6 +41,11 @@ namespace Drawer3D.Model
         ///     Тип выделения для эскиза
         /// </summary>
         private const string SelectionSketch = "SKETCH";
+
+        /// <summary>
+        ///     Тип выделения с помощью точки
+        /// </summary>
+        private const string SelectionByPointsType = "FACE";
 
 
         /// <summary>
@@ -97,8 +103,22 @@ namespace Drawer3D.Model
         /// </summary>
         public void ConnectToApp()
         {
-            var appInstance = Activator.CreateInstance(
-                Type.GetTypeFromCLSID(_appSettings.Guid));
+            Type solidWorksType = null;
+            foreach (var type in _appSettings.ApiNumbers)
+            {
+                solidWorksType = Type.GetTypeFromProgID($"SldWorks.Application.{type}");
+                if (solidWorksType != null)
+                {
+                    break;
+                }
+            }
+
+            if (solidWorksType == null)
+            {
+                throw new ExternalException(string.Join(", ", _appSettings.ApiNumbers));
+            }
+
+            var appInstance = Activator.CreateInstance(solidWorksType);
 
             _app = (SldWorks) appInstance;
             _app.Visible = true;
@@ -208,10 +228,9 @@ namespace Drawer3D.Model
                 return;
             }
 
-            _document.Extension.SelectByRay(pointX.ToMilli(),
-                pointZ.ToMilli(),
-                -pointY.ToMilli(),
-                1, 1, 1, 1, 2, false, 0, 0);
+            _document.Extension.SelectByID2(string.Empty, SelectionByPointsType
+                , pointX.ToMilli(), pointZ.ToMilli(), -pointY.ToMilli()
+                , false, 0, null, 0);
         }
 
         /// <summary>
