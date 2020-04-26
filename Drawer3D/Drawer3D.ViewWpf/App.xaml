@@ -9,7 +9,7 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Drawer3D.ViewWpf.ViewModels">
     <Application.Resources>
-        <sys:String x:Key="SolidWorksGuid">d134b411-3689-497d-b2d7-a27cb1066648</sys:String>
+        <sys:String x:Key="SolidWorksApiNumbers">28,22</sys:String>
         <sys:String x:Key="SolidWorksName">SLDWORKS</sys:String>
         <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </Application.Resources>

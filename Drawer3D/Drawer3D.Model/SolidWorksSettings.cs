@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Drawer3D.Model.Extensions;
 
 namespace Drawer3D.Model
 {
@@ -8,14 +10,31 @@ namespace Drawer3D.Model
     public class SolidWorksSettings
     {
         /// <summary>
+        ///     Список версий API
+        /// </summary>
+        private List<int> _apiNumbers;
+
+        /// <summary>
         ///     Название программы в процессах ОС
         /// </summary>
         private string _name = "SLDWORKS";
 
         /// <summary>
-        ///     GUID программы в ОС
+        ///     Список версий API
         /// </summary>
-        public Guid Guid { get; set; }
+        public List<int> ApiNumbers
+        {
+            get => _apiNumbers;
+            set
+            {
+                if (value.IsNullOrEmpty())
+                {
+                    throw new ArgumentOutOfRangeException(nameof(ApiNumbers));
+                }
+
+                _apiNumbers = value;
+            }
+        }
 
         /// <summary>
         ///     Название программы в процессах ОС

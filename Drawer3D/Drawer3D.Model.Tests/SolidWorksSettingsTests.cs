@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Drawer3D.Model.Tests
@@ -32,15 +33,27 @@ namespace Drawer3D.Model.Tests
         }
 
         /// <summary>
-        ///     Проверка свойства Guid
+        ///     Проверка свойства ApiNumbers
         /// </summary>
         [Test]
-        public void GuidTest_ShouldBeEqual()
+        public void ApiNumbersTest_ShouldBeNotEmpty()
         {
-            var guid = Guid.NewGuid();
+            var apiNumbers = new List<int> {22, 28};
 
-            var settings = new SolidWorksSettings {Guid = guid};
-            Assert.AreEqual(guid, settings.Guid);
+            var settings = new SolidWorksSettings {ApiNumbers = apiNumbers};
+            Assert.That(settings.ApiNumbers, Is.Not.Null.And.Not.Empty);
+            settings.ApiNumbers.ForEach(n => apiNumbers.Contains(n));
+        }
+
+        /// <summary>
+        ///     Негативная проверка свойства ApiNumbers
+        /// </summary>
+        [TestCaseSource(typeof(SolidWorksSettingsTestsData)
+            , nameof(SolidWorksSettingsTestsData.ApiNumbersNegative))]
+        public void NameTest_GivenEmptyNumbers_ThrowsException(List<int> numbers)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new SolidWorksSettings {ApiNumbers = numbers});
         }
     }
 
@@ -59,6 +72,18 @@ namespace Drawer3D.Model.Tests
                 yield return new TestCaseData(null);
                 yield return new TestCaseData(string.Empty);
                 yield return new TestCaseData("    ");
+            }
+        }
+
+        /// <summary>
+        ///     Недопустимые номера API
+        /// </summary>
+        public static IEnumerable ApiNumbersNegative
+        {
+            get
+            {
+                yield return new TestCaseData(null);
+                yield return new TestCaseData(new List<int>());
             }
         }
     }

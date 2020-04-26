@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Drawer3D.Model;
 using Drawer3D.Model.Enums;
 using Drawer3D.Model.Exceptions;
+using Drawer3D.View.Properties;
 using Newtonsoft.Json;
 
 namespace Drawer3D.View
@@ -95,8 +97,10 @@ namespace Drawer3D.View
         /// <returns>Настройки для программы SOLIDWORKS</returns>
         private SolidWorksSettings GetSolidWorksSettings()
         {
-            var settingsText = File.ReadAllText(_solidWorksSettingsPath);
-            return JsonConvert.DeserializeObject<SolidWorksSettings>(settingsText);
+            var jsonString = File.ReadAllText(_solidWorksSettingsPath);
+            jsonString = jsonString.Replace("\"[", "[");
+            jsonString = jsonString.Replace("]\"", "]");
+            return JsonConvert.DeserializeObject<SolidWorksSettings>(jsonString);
         }
 
         private void TextBoxes_TextChanged(object sender, EventArgs e)
@@ -169,6 +173,15 @@ namespace Drawer3D.View
             catch (FigureException exception)
             {
                 HandleFigureException(exception);
+            }
+            catch (ExternalException)
+            {
+                var info = Resources.ResourceManager.GetString("ProgramClosed");
+
+                MessageBox.Show(info,
+                    string.Empty,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
         }
 
@@ -396,7 +409,20 @@ namespace Drawer3D.View
 
         private void MenuProjectNew_Click(object sender, EventArgs e)
         {
-            _drawer.ConnectToApp();
+            try
+            {
+                _drawer.ConnectToApp();
+            }
+            catch (ExternalException exception)
+            {
+                var info = Resources.ResourceManager.GetString("ProgramNotFound");
+
+                MessageBox.Show(string.Format(info, exception.Message),
+                    string.Empty,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
             _menuProjectSaveAs.Enabled = true;
         }
 

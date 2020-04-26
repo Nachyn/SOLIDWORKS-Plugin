@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Windows;
 using Drawer3D.Model;
 using GalaSoft.MvvmLight;
@@ -91,8 +91,13 @@ namespace Drawer3D.ViewWpf.ViewModels
         private SolidWorksSettings GetSolidWorksSettings()
         {
             var name = Application.Current.Resources["SolidWorksName"].ToString();
-            var guid = Application.Current.Resources["SolidWorksGuid"].ToString();
-            return new SolidWorksSettings {Guid = new Guid(guid), Name = name};
+            var apiNumbers = Application.Current.Resources["SolidWorksApiNumbers"].ToString();
+
+            return new SolidWorksSettings
+            {
+                Name = name, ApiNumbers = apiNumbers.Split(',')
+                    .Select(int.Parse).ToList()
+            };
         }
     }
 }

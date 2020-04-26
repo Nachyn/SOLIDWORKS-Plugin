@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Drawer3D.Model.Extensions;
 using Drawer3D.Model.Interfaces;
 using SolidWorks.Interop.sldworks;
@@ -40,6 +41,11 @@ namespace Drawer3D.Model
         ///     Тип выделения для эскиза
         /// </summary>
         private const string SelectionSketch = "SKETCH";
+
+        /// <summary>
+        ///     Тип выделения с помощью точки
+        /// </summary>
+        private const string SelectionByPointsType = "FACE";
 
 
         /// <summary>
@@ -97,8 +103,22 @@ namespace Drawer3D.Model
         /// </summary>
         public void ConnectToApp()
         {
-            var appInstance = Activator.CreateInstance(
-                Type.GetTypeFromCLSID(_appSettings.Guid));
+            Type solidWorksType = null;
+            foreach (var number in _appSettings.ApiNumbers)
+            {
+                solidWorksType = Type.GetTypeFromProgID($"SldWorks.Application.{number}");
+                if (solidWorksType != null)
+                {
+                    break;
+                }
+            }
+
+            if (solidWorksType == null)
+            {
+                throw new ExternalException(string.Join(", ", _appSettings.ApiNumbers));
+            }
+
+            var appInstance = Activator.CreateInstance(solidWorksType);
 
             _app = (SldWorks) appInstance;
             _app.Visible = true;
@@ -208,10 +228,9 @@ namespace Drawer3D.Model
                 return;
             }
 
-            _document.Extension.SelectByRay(pointX.ToMilli(),
-                pointZ.ToMilli(),
-                -pointY.ToMilli(),
-                1, 1, 1, 1, 2, false, 0, 0);
+            _document.Extension.SelectByID2(string.Empty, SelectionByPointsType
+                , pointX.ToMilli(), pointZ.ToMilli(), -pointY.ToMilli()
+                , false, 0, null, 0);
         }
 
         /// <summary>
@@ -269,6 +288,39 @@ namespace Drawer3D.Model
             }
 
             _document.EditDelete();
+        }
+
+        /// <summary>
+        ///     Увеличить по координатам
+        /// </summary>
+        /// <param name="x1">1 координата по X</param>
+        /// <param name="y1">1 координата по Y</param>
+        /// <param name="z1">1 координата по Z</param>
+        /// <param name="x2">2 координата по X</param>
+        /// <param name="y2">2 координата по Y</param>
+        /// <param name="z2">2 координата по Z</param>
+        public void Zoom(double x1, double y1, double z1, double x2, double y2, double z2)
+        {
+            if (!IsConnectedToApp)
+            {
+                return;
+            }
+
+            _document.ViewZoomTo2(x1.ToMilli(), y1.ToMilli(), z1.ToMilli()
+                , x2.ToMilli(), y2.ToMilli(), z2.ToMilli());
+        }
+
+        /// <summary>
+        ///     Увеличить фигуру в полный размер
+        /// </summary>
+        public void ZoomToFit()
+        {
+            if (!IsConnectedToApp)
+            {
+                return;
+            }
+
+            _document.ViewZoomtofit2();
         }
     }
 }

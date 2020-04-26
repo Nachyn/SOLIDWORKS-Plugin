@@ -160,8 +160,10 @@ namespace Drawer3D.Model
 
             _commander.SelectByPoint(x / (double) 2, y / (double) 2,
                 _figureSettings.WallThickness);
-
             _commander.ToggleSketchMode();
+
+            _commander.Zoom(-10, -10, 0, 15, 15, 0);
+
             _commander.CreateRectangleOnSketch(0, 0, 0, x, y, 0);
             _commander.ClearSelection();
 
@@ -171,12 +173,11 @@ namespace Drawer3D.Model
                 , x - _figureSettings.WallThickness
                 , y - _figureSettings.WallThickness
                 , 0);
-
             _commander.ClearSelection();
 
             _commander.ToggleSketchMode();
             _commander.ExtrudeSketch(z - _figureSettings.WallThickness);
-
+            _commander.ZoomToFit();
             _sizeX = x;
             _sizeY = y;
         }
@@ -205,8 +206,8 @@ namespace Drawer3D.Model
                 _ => throw new ArgumentOutOfRangeException(nameof(vector), vector, null)
             };
 
-            _commander.SelectByPoint(_figureSettings.WallThickness + 1
-                , _figureSettings.WallThickness + 1
+            _commander.SelectByPoint(_figureSettings.WallThickness * 2
+                , _figureSettings.WallThickness + 2
                 , _figureSettings.WallThickness);
 
             _commander.ToggleSketchMode();
