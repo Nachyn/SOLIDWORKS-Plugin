@@ -71,7 +71,7 @@ namespace Drawer3D.Model.Tests
         }
 
         /// <summary>
-        ///     Проверка метода CheckSize
+        ///     Негативная проверка метода CheckSize (недопустимые параметры)
         /// </summary>
         /// <param name="size">Недопустимые размеры</param>
         /// <param name="vector">Недопустимые вектора</param>
@@ -170,7 +170,7 @@ namespace Drawer3D.Model.Tests
         }
 
         /// <summary>
-        ///     Проверка метода CheckHeightWalls
+        ///     Негативная проверка метода CheckHeightWalls (недопустимый аргумент)
         /// </summary>
         /// <param name="height">Высота</param>
         /// <param name="vector">Вектор</param>

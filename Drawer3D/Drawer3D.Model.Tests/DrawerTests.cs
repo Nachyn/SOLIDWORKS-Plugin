@@ -103,7 +103,7 @@ namespace Drawer3D.Model.Tests
         }
 
         /// <summary>
-        ///     Проверка метода BuildFigure (должен перестроить)
+        ///     Негативная проверка метода BuildFigure (null аргумент)
         /// </summary>
         [Test]
         public void BuildFigureTest_GivenNullArgument_ThrowsException()
@@ -113,7 +113,7 @@ namespace Drawer3D.Model.Tests
         }
 
         /// <summary>
-        ///     Негативная проверка метода BuildFigure
+        ///     Негативная проверка метода BuildFigure (нет подключения к САПР)
         /// </summary>
         /// <param name="figure">Валидные параметры фигуры</param>
         [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
