@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Resources;
 using Drawer3D.Model.Extensions;
 using NSubstitute;
@@ -12,12 +13,14 @@ namespace Drawer3D.Model.Tests
     /// </summary>
     public class ResourceManagerExtensionsTests
     {
-        /// <summary>
-        ///     Негативная проверка расширения GetFormattedString
-        /// </summary>
-        /// <param name="key">Ключ</param>
         [TestCaseSource(typeof(RmExtensionsTestsData)
-            , nameof(RmExtensionsTestsData.GetFormattedStringsNegative))]
+            , nameof(RmExtensionsTestsData.GetFormattedStringsNegative)
+            , new object[]
+            {
+                "Негативный тест. " +
+                "Проверка возвращаемого значения GetFormattedString " +
+                "Передан недопустимый ключ"
+            })]
         public void GetFormattedStringTest_GivenInvalidKey_ThrowsException(string key)
         {
             var resourceManager = Substitute.For<ResourceManager>();
@@ -34,14 +37,18 @@ namespace Drawer3D.Model.Tests
         /// <summary>
         ///     Недопустимые ключи для ResourceManager
         /// </summary>
-        public static IEnumerable GetFormattedStringsNegative
+        /// <param name="testName">Название теста</param>
+        public static IEnumerable GetFormattedStringsNegative(string testName)
         {
-            get
+            var testCases = new List<TestCaseData>
             {
-                yield return new TestCaseData(null);
-                yield return new TestCaseData(string.Empty);
-                yield return new TestCaseData("   ");
-            }
+                new TestCaseData(null),
+                new TestCaseData(string.Empty),
+                new TestCaseData("   ")
+            };
+
+            testCases.ForEach(t => t.SetName(testName));
+            return testCases;
         }
     }
 }

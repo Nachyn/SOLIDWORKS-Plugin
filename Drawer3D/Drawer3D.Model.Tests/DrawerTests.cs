@@ -24,7 +24,7 @@ namespace Drawer3D.Model.Tests
         private Drawer _drawer;
 
         /// <summary>
-        ///     Инициализировать каждый тест
+        ///     Инициализировать перед каждым тестом
         /// </summary>
         [SetUp]
         public void InitializeEachTest()
@@ -34,89 +34,88 @@ namespace Drawer3D.Model.Tests
             _drawer = new Drawer(new FigureSettings(), _commander);
         }
 
-        /// <summary>
-        ///     Негативный тест конструктора
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. Конструктору переданы null аргументы")]
         public void ConstructorTest_GivenInvalidArguments_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() => new Drawer(null, null));
         }
 
-        /// <summary>
-        ///     Проверка свойства FigureSettings
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Получение настроек фигуры FigureSettings")]
         public void FigureSettingsTest_ShouldReturnCorrectInstance()
         {
             Assert.IsInstanceOf<FigureSettings>(_drawer.FigureSettings);
         }
 
-        /// <summary>
-        ///     Проверка метода CheckFigure
-        /// </summary>
-        /// <param name="figure">Валидные параметры фигуры</param>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures)
+            , new object[]
+            {
+                "Проверка пользовательских параметров фигуры. " +
+                "Переданы валидные параметры"
+            })]
         public void CheckFigureTest_ShouldBeComplete(Figure figure)
         {
             _drawer.CheckFigure(figure);
         }
 
-        /// <summary>
-        ///     Негативная проверка метода CheckFigure (null аргумент)
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. " +
+                             "Проверка пользовательских параметров фигуры. " +
+                             "Передан null аргумент)")]
         public void CheckFigureTest_GivenNullArgument_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() =>
                 _drawer.CheckFigure(null));
         }
 
-        /// <summary>
-        ///     Негативная проверка метода CheckFigure (недопустимый аргумент)
-        /// </summary>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative)
+            , new object[]
+            {
+                "Негативный тест. " +
+                "Проверка пользовательских параметров фигуры. " +
+                "Переданы недопустимые аргументы"
+            })]
         public void CheckFigureTest_GivenInvalidArgument_ThrowsException(Figure figure)
         {
             Assert.Throws<FigureException>(() => _drawer.CheckFigure(figure));
         }
 
-        /// <summary>
-        ///     Проверка метода BuildFigure
-        /// </summary>
-        /// <param name="figure">Валидные параметры фигуры</param>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures)
+            , new object[]
+            {
+                "Построение фигуры. " +
+                "Переданы валидные параметры"
+            })]
         public void BuildFigureTest_ShouldBeComplete(Figure figure)
         {
             _drawer.BuildFigure(figure);
         }
 
-        /// <summary>
-        ///     Проверка метода BuildFigure (должен перестроить)
-        /// </summary>
-        /// <param name="figure">Валидные параметры фигуры</param>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures)
+            , new object[]
+            {
+                "Перестроение фигуры. " +
+                "Переданы валидные параметры"
+            })]
         public void BuildFigureTest_ShouldBeRebuild(Figure figure)
         {
             _commander.BuildedPartFiguresCount.Returns(1);
             _drawer.BuildFigure(figure);
         }
 
-        /// <summary>
-        ///     Негативная проверка метода BuildFigure (null аргумент)
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. Построение фигуры. " +
+                             "Передан null аргумент")]
         public void BuildFigureTest_GivenNullArgument_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() =>
                 _drawer.BuildFigure(null));
         }
 
-        /// <summary>
-        ///     Негативная проверка метода BuildFigure (нет подключения к САПР)
-        /// </summary>
-        /// <param name="figure">Валидные параметры фигуры</param>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.Figures)
+            , new object[]
+            {
+                "Негативный тест. " +
+                "Построение фигуры. " +
+                "Нет подключения к SolidWorks"
+            })]
         public void BuildFigureTest_GivenDisconnect_ThrowsException(Figure figure)
         {
             _commander.IsConnectedToApp.Returns(false);
@@ -124,37 +123,33 @@ namespace Drawer3D.Model.Tests
                 _drawer.BuildFigure(figure));
         }
 
-        /// <summary>
-        ///     Негативная проверка метода BuildFigure (недопустимый аргумент)
-        /// </summary>
-        /// <param name="figure">Недопустимые параметры фигуры</param>
-        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative))]
+        [TestCaseSource(typeof(DrawerTestsData), nameof(DrawerTestsData.FiguresNegative)
+            , new object[]
+            {
+                "Негативный тест. " +
+                "Построение фигуры. " +
+                "Переданы некорректные параметры"
+            })]
         public void BuildFigureTest_GivenInvalidArguments_ThrowsException(Figure figure)
         {
             Assert.Throws<FigureException>(() => _drawer.BuildFigure(figure));
         }
 
-        /// <summary>
-        ///     Проверка метода ConnectToApp
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Подключение к SolidWorks")]
         public void ConnectToAppTest_ShouldBeComplete()
         {
             _drawer.ConnectToApp();
         }
 
-        /// <summary>
-        ///     Проверка метода SaveToFile
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Сохранение проекта в файл")]
         public void SaveToFileTest_ShouldBeComplete()
         {
             _drawer.SaveToFile(string.Empty);
         }
 
-        /// <summary>
-        ///     Негативная проверка метода SaveToFile
-        /// </summary>
+        [TestCase(TestName = "Негативный тест. " +
+                             "Сохранение проекта в файл. " +
+                             "Нет подключения в SolidWorks")]
         [Test]
         public void SaveToFileTest_GivenDisconnect_ThrowsException()
         {
@@ -171,13 +166,14 @@ namespace Drawer3D.Model.Tests
         /// <summary>
         ///     Валидные параметры фигуры
         /// </summary>
-        public static IEnumerable Figures
+        /// <param name="testName">Название теста</param>
+        public static IEnumerable Figures(string testName)
         {
-            get
+            var testCases = new List<TestCaseData>
             {
-                yield return new TestCaseData(new Figure {X = 200, Y = 200, Z = 50});
-                yield return new TestCaseData(new Figure {X = 400, Y = 400, Z = 150});
-                yield return new TestCaseData(new Figure
+                new TestCaseData(new Figure {X = 200, Y = 200, Z = 50}),
+                new TestCaseData(new Figure {X = 400, Y = 400, Z = 150}),
+                new TestCaseData(new Figure
                 {
                     X = 350, Y = 300, Z = 100, WallsX = new Walls
                     {
@@ -193,37 +189,49 @@ namespace Drawer3D.Model.Tests
                             25, 75, 100, 125, 150
                         }
                     }
-                });
-            }
+                })
+            };
+
+            testCases.ForEach(t => t.SetName(testName));
+            return testCases;
         }
 
         /// <summary>
         ///     Некорректные параметры фигуры
         /// </summary>
-        public static IEnumerable FiguresNegative
+        /// <param name="testName">Название теста</param>
+        public static IEnumerable FiguresNegative(string testName)
         {
-            get
+            var testCases = new List<TestCaseData>
             {
-                yield return new TestCaseData(new Figure {X = 100, Y = 100, Z = 5});
-                yield return new TestCaseData(new Figure {X = -1, Y = -1, Z = 0});
-                yield return new TestCaseData(new Figure
+                new TestCaseData(new Figure {X = 100, Y = 100, Z = 5}),
+                new TestCaseData(new Figure {X = -1, Y = -1, Z = 0}),
+                new TestCaseData(new Figure
                 {
-                    X = 350, Y = 300, Z = 100, WallsX = new Walls
+                    X = 350,
+                    Y = 300,
+                    Z = 100,
+                    WallsX = new Walls
                     {
-                        Height = 95, Points = new List<int>
+                        Height = 95,
+                        Points = new List<int>
                         {
                             25, 25, 100, 125, 150
                         }
                     },
                     WallsY = new Walls
                     {
-                        Height = 95, Points = new List<int>
+                        Height = 95,
+                        Points = new List<int>
                         {
                             25, 26, 100, 125, 150
                         }
                     }
-                });
-            }
+                })
+            };
+
+            testCases.ForEach(t => t.SetName(testName));
+            return testCases;
         }
     }
 }

@@ -9,10 +9,7 @@ namespace Drawer3D.Model.Tests
     /// </summary>
     public class FigureErrorTests
     {
-        /// <summary>
-        ///     Проверка свойства Key
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Присвоение и получение свойства Key")]
         public void KeyTest_ShouldReturnValidData()
         {
             var guid = Guid.NewGuid().ToString();
@@ -21,10 +18,7 @@ namespace Drawer3D.Model.Tests
             Assert.AreEqual(guid, error.Key);
         }
 
-        /// <summary>
-        ///     Проверка свойства Message
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Присвоение и получение свойства Message")]
         public void MessageTest_ShouldReturnValidData()
         {
             var guid = Guid.NewGuid().ToString();
