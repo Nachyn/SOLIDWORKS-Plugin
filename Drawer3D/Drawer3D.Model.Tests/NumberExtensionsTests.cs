@@ -8,27 +8,17 @@ namespace Drawer3D.Model.Tests
     /// </summary>
     public class NumberExtensionsTests
     {
-        /// <summary>
-        ///     Проверка расширения ToMilli (int)
-        /// </summary>
-        /// <param name="expected">Ожидаемое значение</param>
-        /// <param name="actual">Преобразованное значение</param>
-        [TestCase(0.05, 50)]
-        [TestCase(0.15, 150)]
-        [TestCase(7.75, 7750)]
+        [TestCase(0.05, 50, TestName = "Проверка возвращаемого значения ToMilli (int)")]
+        [TestCase(0.15, 150, TestName = "Проверка возвращаемого значения ToMilli (int)")]
+        [TestCase(7.75, 7750, TestName = "Проверка возвращаемого значения ToMilli (int)")]
         public void IntegerToMilliTest_ShouldBeEqual(double expected, int actual)
         {
             Assert.AreEqual(expected, actual.ToMilli(), double.Epsilon);
         }
 
-        /// <summary>
-        ///     Проверка расширения ToMilli (double)
-        /// </summary>
-        /// <param name="expected">Ожидаемое значение</param>
-        /// <param name="actual">Преобразованное значение</param>
-        [TestCase(0.05, 50)]
-        [TestCase(0.15, 150)]
-        [TestCase(7.75, 7750)]
+        [TestCase(0.05, 50, TestName = "Проверка возвращаемого значения ToMilli (double)")]
+        [TestCase(0.15, 150, TestName = "Проверка возвращаемого значения ToMilli (double)")]
+        [TestCase(7.75, 7750, TestName = "Проверка возвращаемого значения ToMilli (double)")]
         public void DoubleToMilliTest_ShouldBeEqual(double expected, double actual)
         {
             Assert.AreEqual(expected, actual.ToMilli(), double.Epsilon);

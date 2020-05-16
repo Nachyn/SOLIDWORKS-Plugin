@@ -9,10 +9,7 @@ namespace Drawer3D.Model.Tests
     /// </summary>
     public class EnumerableExtensionsTests
     {
-        /// <summary>
-        ///     Проверка расширения IsNullOrEmpty
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Проверка возвращаемого значения IsNullOrEmpty")]
         public void IsNullOrEmptyTest_ShouldReturnValidResponse()
         {
             Assert.That(!new List<int> {1, 2, 3}.IsNullOrEmpty());

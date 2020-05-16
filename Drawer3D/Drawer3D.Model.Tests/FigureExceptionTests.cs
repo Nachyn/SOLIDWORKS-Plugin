@@ -8,10 +8,7 @@ namespace Drawer3D.Model.Tests
     /// </summary>
     public class FigureExceptionTests
     {
-        /// <summary>
-        ///     Проверка всех свойств
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Присвоение и получение для всех свойств")]
         public void FigureErrorTest_PropertiesShouldReturnValidData()
         {
             const string key = "key";

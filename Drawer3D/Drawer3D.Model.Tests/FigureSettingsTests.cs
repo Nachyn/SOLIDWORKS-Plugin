@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Drawer3D.Model.Tests
@@ -23,148 +24,139 @@ namespace Drawer3D.Model.Tests
             _figureSettings = new FigureSettings();
         }
 
-        /// <summary>
-        ///     Проверка свойства SizeX
-        /// </summary>
-        /// <param name="sizeRange">Валидные диапазоны значений</param>
-        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage))]
+        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage)
+            , new object[]
+            {
+                "Проверка диапазона значений для длины. " +
+                "Переданы валидные диапазоны"
+            })]
         public void SizeXTest_ShouldBeNotNull(SizeRange sizeRange)
         {
             _figureSettings.SizeX = sizeRange;
             Assert.IsNotNull(_figureSettings.SizeX);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства SizeX
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. " +
+                             "Диапазону значений для длины присвоен null аргумент")]
         public void SizeXTest_GivenNullValue_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() => _figureSettings.SizeX = null);
         }
 
-        /// <summary>
-        ///     Проверка свойства SizeY
-        /// </summary>
-        /// <param name="sizeRange">Валидные диапазоны значений</param>
-        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage))]
+        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage)
+            , new object[]
+            {
+                "Проверка диапазона значений для ширины. " +
+                "Переданы валидные диапазоны"
+            })]
         public void SizeYTest_ShouldBeNotNull(SizeRange sizeRange)
         {
             _figureSettings.SizeY = sizeRange;
             Assert.IsNotNull(_figureSettings.SizeY);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства SizeY
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. " +
+                             "Диапазону значений для ширины присвоен null аргумент")]
         public void SizeYTest_GivenNullValue_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() => _figureSettings.SizeY = null);
         }
 
-        /// <summary>
-        ///     Проверка свойства SizeZ
-        /// </summary>
-        /// <param name="sizeRange">Валидные диапазоны значений</param>
-        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage))]
+        [TestCaseSource(typeof(FigureSettingsTestsData), nameof(FigureSettingsTestsData.SizeRage)
+            , new object[]
+            {
+                "Проверка диапазона значений для высоты. " +
+                "Переданы валидные диапазоны"
+            })]
         public void SizeZTest_ShouldBeNotNull(SizeRange sizeRange)
         {
             _figureSettings.SizeZ = sizeRange;
             Assert.IsNotNull(_figureSettings.SizeZ);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства SizeZ
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Негативный тест. " +
+                             "Диапазону значений для высоты присвоен null аргумент")]
         public void SizeZTest_GivenNullValue_ThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() => _figureSettings.SizeZ = null);
         }
 
-        /// <summary>
-        ///     Проверка свойства WallThickness
-        /// </summary>
-        /// <param name="wallThickness">Толщина стен</param>
-        [TestCase(5)]
-        [TestCase(10)]
-        [TestCase(15)]
+        [TestCase(5, TestName = "Толщина стен. Присвоена валидная толщина 5")]
+        [TestCase(10, TestName = "Толщина стен. Присвоена валидная толщина 10")]
+        [TestCase(15, TestName = "Толщина стен. Присвоена валидная толщина 15")]
         public void WallThicknessTest_ShouldBeEqual(int wallThickness)
         {
             _figureSettings.WallThickness = wallThickness;
             Assert.AreEqual(wallThickness, _figureSettings.WallThickness);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства WallThickness
-        /// </summary>
-        /// <param name="wallThickness">Толщина стен</param>
-        [TestCase(-5)]
-        [TestCase(-10)]
-        [TestCase(-15)]
+        [TestCase(-5,
+            TestName = "Негативный тест. Толщина стен. Присвоена недопустимая толщина -5")]
+        [TestCase(-10,
+            TestName = "Негативный тест. Толщина стен. Присвоена недопустимая толщина -10")]
+        [TestCase(-15,
+            TestName = "Негативный тест. Толщина стен. Присвоена недопустимая толщина -15")]
         public void WallThicknessTest_GivenInvalidData_ThrowsException(int wallThickness)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 _figureSettings.WallThickness = wallThickness);
         }
 
-        /// <summary>
-        ///     Проверка свойства MinLengthBetweenWallsX
-        /// </summary>
-        /// <param name="length">Длина</param>
-        [TestCase(20)]
-        [TestCase(30)]
-        [TestCase(40)]
+        [TestCase(20, TestName = "Минимальная длина между стенок вдоль вектора X. " +
+                                 "Присвоено значение 20")]
+        [TestCase(30, TestName = "Минимальная длина между стенок вдоль вектора X. " +
+                                 "Присвоено значение 30")]
+        [TestCase(40, TestName = "Минимальная длина между стенок вдоль вектора X. " +
+                                 "Присвоено значение 40")]
         public void MinLengthBetweenWallsXTest_ShouldBeEqual(int length)
         {
             _figureSettings.MinLengthBetweenWallsX = length;
             Assert.AreEqual(length, _figureSettings.MinLengthBetweenWallsX);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства MinLengthBetweenWallsX
-        /// </summary>
-        /// <param name="length">Длина</param>
-        [TestCase(-20)]
-        [TestCase(-30)]
-        [TestCase(-40)]
+        [TestCase(-20, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора X. " +
+                                  "Присвоено значение -20")]
+        [TestCase(-30, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора X. " +
+                                  "Присвоено значение -30")]
+        [TestCase(-40, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора X. " +
+                                  "Присвоено значение -40")]
         public void MinLengthBetweenWallsXTest_GivenInvalidData_ThrowsException(int length)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 _figureSettings.MinLengthBetweenWallsX = length);
         }
 
-        /// <summary>
-        ///     Проверка свойства MinLengthBetweenWallsY
-        /// </summary>
-        /// <param name="length">Длина</param>
-        [TestCase(20)]
-        [TestCase(30)]
-        [TestCase(40)]
+        [TestCase(20, TestName = "Минимальная длина между стенок вдоль вектора Y. " +
+                                 "Присвоено значение 20")]
+        [TestCase(30, TestName = "Минимальная длина между стенок вдоль вектора Y. " +
+                                 "Присвоено значение 30")]
+        [TestCase(40, TestName = "Минимальная длина между стенок вдоль вектора Y. " +
+                                 "Присвоено значение 40")]
         public void MinLengthBetweenWallsYTest_ShouldBeEqual(int length)
         {
             _figureSettings.MinLengthBetweenWallsY = length;
             Assert.AreEqual(length, _figureSettings.MinLengthBetweenWallsY);
         }
 
-        /// <summary>
-        ///     Негативная проверка свойства MinLengthBetweenWallsY
-        /// </summary>
-        /// <param name="length">Длина</param>
-        [TestCase(-20)]
-        [TestCase(-30)]
-        [TestCase(-40)]
+        [TestCase(-20, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора Y. " +
+                                  "Присвоено значение -20")]
+        [TestCase(-30, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора Y. " +
+                                  "Присвоено значение -30")]
+        [TestCase(-40, TestName = "Негативный тест. " +
+                                  "Минимальная длина между стенок вдоль вектора Y. " +
+                                  "Присвоено значение -40")]
         public void MinLengthBetweenWallsYTest_GivenInvalidData_ThrowsException(int length)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 _figureSettings.MinLengthBetweenWallsY = length);
         }
 
-        /// <summary>
-        ///     Проверка клонирования FigureSettings
-        /// </summary>
-        [Test]
+        [TestCase(TestName = "Проверка клонирования настроек фигуры FigureSettings")]
         public void CloneTest_ShouldBeClonedWithDifferentReferences()
         {
             var clonedSettings = (FigureSettings) _figureSettings.Clone();
@@ -196,14 +188,18 @@ namespace Drawer3D.Model.Tests
         /// <summary>
         ///     Валидные диапазоны значений
         /// </summary>
-        public static IEnumerable SizeRage
+        /// <param name="testName">Название теста</param>
+        public static IEnumerable SizeRage(string testName)
         {
-            get
+            var testCases = new List<TestCaseData>
             {
-                yield return new TestCaseData(new SizeRange {Min = 200, Max = 300});
-                yield return new TestCaseData(new SizeRange {Min = 100, Max = 200});
-                yield return new TestCaseData(new SizeRange {Min = 100, Max = 400});
-            }
+                new TestCaseData(new SizeRange {Min = 200, Max = 300}),
+                new TestCaseData(new SizeRange {Min = 100, Max = 200}),
+                new TestCaseData(new SizeRange {Min = 100, Max = 400})
+            };
+
+            testCases.ForEach(t => t.SetName(testName));
+            return testCases;
         }
     }
 }
